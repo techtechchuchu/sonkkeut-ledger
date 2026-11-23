@@ -2,6 +2,7 @@
 !/.gitignore
 !/agent-web/
 !/docs/
+!/README.md
 !/unity-training/
 agent-web/dist/
 agent-web/node_modules/
