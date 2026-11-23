@@ -78,6 +78,20 @@ public partial class TrainingGame
         ct.rotation = Quaternion.Slerp(ovRot, povRot, k);
         machine.cam.fieldOfView = Mathf.Lerp(42f, 68f, k);
 
+        // 팀원이 말할 때는 카메라가 그 사람 앞으로 다가갔다가, 말이 끝나면 내 자리로 돌아온다
+        bool shotOn = firstPerson && shotWorker != null && Time.time < cueUntil - 0.3f;
+        shotK = Mathf.MoveTowards(shotK, shotOn ? 1f : 0f, Time.deltaTime * 0.9f);
+        float sk = Mathf.SmoothStep(0f, 1f, shotK);
+        if (sk > 0.001f && shotWorker != null)
+        {
+            Vector3 sp; Quaternion sr;
+            ShotPose(shotWorker, out sp, out sr);
+            ct.position = Vector3.Lerp(ct.position, sp, sk);
+            ct.rotation = Quaternion.Slerp(ct.rotation, sr, sk);
+            machine.cam.fieldOfView = Mathf.Lerp(machine.cam.fieldOfView, 52f, sk);
+        }
+        k *= 1f - sk; // 카메라가 나를 떠나 있는 동안은 내 손이 보이지 않는다
+
         // 내 몸은 보이지 않게 (그림자만 바닥에 남긴다)
         bool hide = k > 0.5f;
         if (hide != bodyHidden)

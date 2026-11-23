@@ -20,15 +20,27 @@ public partial class TrainingGame
     void DrawSubtitle(float W)
     {
         if (machine == null) return;
+        // 주인공의 상황 대사가 있으면 그것만 보여 준다 (소리와 같은 대사)
+        bool cueOn = Time.time < cueUntil && !string.IsNullOrEmpty(cueShown);
         WorkerRig cur = null;
         int curIdx = -1;
-        for (int i = 0; i < machine.workers.Count; i++)
+        string who, line;
+        float sStart, sUntil;
+        if (cueOn)
         {
-            WorkerRig w = machine.workers[i];
-            if (w.animator == null || string.IsNullOrEmpty(w.say) || Time.time > w.sayUntil) continue;
-            if (cur == null || w.sayStart > cur.sayStart) { cur = w; curIdx = i; }
+            who = cueName; line = cueShown; sStart = cueStart; sUntil = cueUntil;
         }
-        if (cur == null) return;
+        else
+        {
+            for (int i = 0; i < machine.workers.Count; i++)
+            {
+                WorkerRig w = machine.workers[i];
+                if (w.animator == null || string.IsNullOrEmpty(w.say) || Time.time > w.sayUntil) continue;
+                if (cur == null || w.sayStart > cur.sayStart) { cur = w; curIdx = i; }
+            }
+            if (cur == null) return;
+            who = RoleName(cur, curIdx); line = cur.say; sStart = cur.sayStart; sUntil = cur.sayUntil;
+        }
 
         if (sSub == null)
         {
@@ -37,13 +49,12 @@ public partial class TrainingGame
             sSubName = new GUIStyle(sSub) { fontSize = 20, fontStyle = FontStyle.Bold };
             sSubName.normal.textColor = new Color(1f, 0.70f, 0.48f);
         }
-        float tin = Mathf.Clamp01((Time.time - cur.sayStart) / 0.2f);
-        float tout = Mathf.Clamp01((cur.sayUntil - Time.time) / 0.4f);
+        float tin = Mathf.Clamp01((Time.time - sStart) / 0.2f);
+        float tout = Mathf.Clamp01((sUntil - Time.time) / 0.4f);
         float a = Mathf.Min(tin, tout);
 
-        string who = RoleName(cur, curIdx);
         Vector2 nameSize = sSubName.CalcSize(new GUIContent(who));
-        Vector2 textSize = sSub.CalcSize(new GUIContent(cur.say));
+        Vector2 textSize = sSub.CalcSize(new GUIContent(line));
         float bw = nameSize.x + textSize.x + 64f, bh = 52f;
         float cx = 488 + (W - 1076) / 2f;
         var r = new Rect(cx - bw / 2f, 1080 - 24 - 250 - 66f, bw, bh);
@@ -55,7 +66,7 @@ public partial class TrainingGame
         GUI.DrawTexture(new Rect(r.x, r.y, 5f, r.height), white); // 왼쪽 주황 띠
         GUI.color = new Color(1f, 1f, 1f, a);
         GUI.Label(new Rect(r.x + 20f, r.y, nameSize.x + 4f, r.height), who, sSubName);
-        GUI.Label(new Rect(r.x + 32f + nameSize.x, r.y, textSize.x + 8f, r.height), cur.say, sSub);
+        GUI.Label(new Rect(r.x + 32f + nameSize.x, r.y, textSize.x + 8f, r.height), line, sSub);
         GUI.color = old;
     }
 }

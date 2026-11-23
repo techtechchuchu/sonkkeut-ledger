@@ -25,6 +25,9 @@ public class WorkerRig
     public WorkerMode mode;
     public float phase;
     public float walkMinX, walkMaxX, walkDir = 1f;
+    public float walkSpeed;          // 지금 걷는 속도(m/s). 천천히 붙고 천천히 줄어든다
+    public float animSpeed = 1f;     // 사람마다 조금 다른 동작 속도 (모두 똑같이 움직이지 않게)
+    public bool yawInit;
 }
 
 // 3D 표지판 위에 그릴 글자. 카메라가 고정이라 화면 좌표로 투영해 그린다

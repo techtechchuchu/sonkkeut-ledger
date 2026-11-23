@@ -15,14 +15,15 @@
 <header class="nav">
   <a class="logo" href="#top"><span class="logo-mark" aria-hidden="true"></span>손끝 원장</a>
   <nav class="nav-links" aria-label="주요 메뉴">
+    <a href="#summary">주제</a>
     <a href="#story">하룻밤</a>
+    <a href="#demo">체험</a>
     <a href="#background">배경</a>
     <a href="#how">서비스</a>
-    <a href="#demo">체험</a>
-    <a href="#training">3D 훈련</a>
     <a href="#reward">보상</a>
+    <button type="button" class="nav-evid" data-open="evidence">근거·참고문헌</button>
   </nav>
-  <a class="btn btn-small" href="#demo">체험하기</a>
+  <a class="btn btn-small" href="portal.html">업무 포털 열기</a>
 </header>
 
 <section class="hero" id="top">
@@ -53,6 +54,36 @@
         <span class="hc-uses">활용 42회</span>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="section alt" id="summary">
+  <div class="wrap">
+    <p class="kicker">주제</p>
+    <h2>사라지는 숙련자의 손끝 노하우를 장부로 남겨, 신입이 쓰게 합니다</h2>
+    <p class="section-lede">서비스 이름은 "손끝 원장"입니다. 숙련자가 퇴직하면 작업표준서에 없는 요령(원료 습기 확인, 금형 온도 기다리기, 체크링 마모 점검)도 함께 사라집니다.</p>
+    <div class="sumgrid">
+      <article class="sumcard">
+        <span class="sumno">배경</span>
+        <h3>신입은 원인을 모른 채 조건을 건드립니다</h3>
+        <p>표준서에는 조건값만 있어서, 불량이 나도 무엇부터 볼지 알 수 없습니다.</p>
+      </article>
+      <article class="sumcard">
+        <span class="sumno">서비스</span>
+        <h3>남기고, 찾고, 보상합니다</h3>
+        <ol>
+          <li><b>조각으로 남기기</b> 증상, 원인, 할 일, 출처를 장부에 쌓습니다.</li>
+          <li><b>현장 에이전트</b> "하얀 물결 같은 게 생겨요"라고 적으면 조각을 찾아 줍니다.</li>
+          <li><b>노하우 남기기</b> 조장이 퇴근 전에 남깁니다.</li>
+        </ol>
+      </article>
+      <article class="sumcard">
+        <span class="sumno">체험</span>
+        <h3>표준서만 볼 때와 조각을 따를 때를 비교합니다</h3>
+        <p>웹 장부와 3D 공장에서 같은 조건의 불량률을 견줘 봅니다. 수치는 예시 가정 모델입니다.</p>
+      </article>
+    </div>
+    <p class="sumstory"><b>김민준 씨의 하룻밤</b> 입사 4주차 신입이 박 조장 없이 야간 교대로 도어 트림 100쇼트를 찍습니다. 하얀 물결 같은 불량이 생기는데 인수인계에는 특이사항이 없었습니다.</p>
   </div>
 </section>
 
@@ -101,11 +132,274 @@
   </div>
 </section>
 
+<section class="section" id="demo">
+  <div class="wrap">
+    <p class="kicker">체험</p>
+    <h2>그날 밤을 3D 공장에서 직접 겪어 보세요</h2>
+    <p class="section-lede">3D 공장에서 민준 씨가 되어 직접 생산해 보세요. 노하우를 남기는 일, 야간에 찾아보는 일, 보상 결과는 옆 탭에서 이어서 볼 수 있습니다.</p>
+    <p class="section-lede"><a class="btn btn-small" href="portal.html">기업용 업무 포털로 보기 →</a> 대시보드, 노하우 라이브러리, 등록·검토 승인, 보상 원장을 회사에서 쓰는 화면 구조로 볼 수 있어요.</p>
+
+    <div class="tablet" aria-label="에이전트 태블릿">
+      <div class="tablet-screen">
+      <div class="tabs" role="tablist">
+      <button role="tab" data-tab="training" aria-selected="true"><b>1</b> 3D 공장에서 훈련하기</button>
+      <button role="tab" data-tab="interview" aria-selected="false"><b>2</b> 웹에서: 노하우 남기기</button>
+      <button role="tab" data-tab="assist" aria-selected="false"><b>3</b> 웹에서: 야간에 찾아보기</button>
+      <button role="tab" data-tab="ledger" aria-selected="false"><b>4</b> 공유·보상 원장</button>
+    </div>
+
+    <!-- 숙련자 인터뷰 에이전트 -->
+    <div id="tab-interview" class="pane" hidden>
+      <section class="chat-card">
+        <div class="chat-head">
+          <div>
+            <h3>인터뷰 에이전트</h3>
+            <p>짧게 묻거나 30초 말을 받아, 증상 → 확인 순서 → 원인으로 정리합니다</p>
+          </div>
+          <button class="ghost" id="iv-restart" type="button">처음부터</button>
+        </div>
+        <div class="messages" id="iv-messages" aria-live="polite"></div>
+        <div class="choices" id="iv-choices"></div>
+        <form class="composer" id="iv-form">
+          <input id="iv-input" type="text" autocomplete="off" placeholder="답변을 입력하세요" aria-label="답변 입력">
+          <button type="submit">보내기</button>
+        </form>
+      </section>
+      <aside class="side-card">
+        <h3>지금 정리 중인 조각</h3>
+        <dl class="draft" id="iv-draft"></dl>
+        <p class="hint">질문에 답할 때마다 채워집니다. 실명 대신 ID로만 기록합니다.</p>
+      </aside>
+    </div>
+
+    <!-- 신입 작업 도우미 에이전트 -->
+    <div id="tab-assist" class="pane" hidden>
+      <section class="chat-card">
+        <div class="chat-head">
+          <div>
+            <h3>작업 도우미 에이전트</h3>
+            <p>용어를 몰라도 본 대로 적으면 조장이 남긴 확인 순서를 찾아 줍니다</p>
+          </div>
+        </div>
+        <form class="cond" id="as-cond">
+          <label>공정 <select id="as-process"></select></label>
+          <label>외기온도(℃) <input id="as-temp" type="number" value="-3" min="-20" max="45"></label>
+          <label>습도(%) <input id="as-humidity" type="number" value="35" min="0" max="100"></label>
+          <label>설비 연수(년) <input id="as-age" type="number" value="15" min="0" max="50"></label>
+          <label>내 근속(주) <input id="as-tenure" type="number" value="4" min="0" max="520"></label>
+          <div class="presets">
+            <button type="button" class="chip-btn say" data-say="하얀 물결 같은 게 생겨요">"하얀 물결 같은 게 생겨요"</button>
+            <button type="button" class="chip-btn" data-preset="-3,35">한겨울 새벽</button>
+            <button type="button" class="chip-btn" data-preset="24,90">장마철 야간</button>
+            <button type="button" class="chip-btn" data-preset="31,72">열대야</button>
+            <button type="submit">이 상황으로 물어보기</button>
+          </div>
+        </form>
+        <div class="messages" id="as-messages" aria-live="polite"></div>
+        <form class="composer" id="as-form">
+          <input id="as-input" type="text" autocomplete="off" placeholder="예: 하얀 물결 같은 게 생겨요" aria-label="증상이나 상황을 글로 입력">
+          <button type="submit">보내기</button>
+        </form>
+      </section>
+      <aside class="side-card">
+        <h3>예상 불량률</h3>
+        <div id="as-rates"></div>
+        <p class="hint">조각을 따랐다고 기록하면 원작성 숙련자의 활용 횟수가 1 올라갑니다.</p>
+      </aside>
+    </div>
+
+    <!-- 3D 훈련 -->
+    <div id="tab-training" class="pane single">
+      <section class="card train-card">
+        <h3>민준 씨의 그날 밤을 3D 공장에서 서 봅니다</h3>
+        <p class="train-lede">Unity로 만든 자동차 도어 트림 사출 라인입니다. 민준 씨가 되어 현장 에이전트에게 본 대로 말하고, 박 조장의 조각을 따라 100쇼트를 생산해 결과를 비교합니다. "박 조장" 탭에서 남긴 조각과 보상 기록이 그대로 이어집니다.</p>
+        <div class="download top-cta">
+      <a class="btn btn-ghost" href="training/" target="_blank" rel="noopener">새 창에서 크게 열기</a>
+      <p>설치 없이 PC 브라우저에서 열립니다(처음 불러올 때 수십 초). "박 조장" 탭에서 등록한 조각이 3D 공장에 그대로 나타나고, 훈련에서 따른 기록은 이 페이지의 보상 원장에 반영됩니다.</p>
+    </div>
+        <div class="stage" id="stage">
+          <img src="shots/symptom.jpg" alt="3D 사출 공장 화면. 오른쪽 현장 에이전트 패널에서 조각을 고르고 100쇼트를 생산한다" width="1600" height="900">
+          <button type="button" class="stage-go" id="stage-go">▶ 3D 공장 시작하기</button>
+        </div>
+        <p class="stage-tip"><b>공장 안에서 모두 할 수 있습니다.</b> 오른쪽 에이전트 패널의 <b>"조장: 노하우 남기기"</b>를 누르면 박 조장이 되어 노하우를 남기고(인터뷰 에이전트), 그 조각이 바로 공장에 적용됩니다. 마우스로 둘러보고, 위쪽 "자료 보기"에서 근거 자료도 볼 수 있습니다.</p>
+        <div class="shots">
+        
+      <figure>
+        <img src="shots/result.jpg" alt="생산 결과 화면. 작업표준서만 봤을 때와 숙련자 조각을 따랐을 때의 불량 개수를 비교한다" loading="lazy" width="1600" height="900">
+        <figcaption>같은 조건에서 조각을 따르기 전후의 불량 개수를 비교합니다</figcaption>
+      </figure>
+      <figure>
+        <img src="shots/ledger.jpg" alt="숙련자 기여도 보상 원장 화면. 숙련자별 조각 수, 활용 횟수, 배분액이 표시된다" loading="lazy" width="1600" height="900">
+        <figcaption>따른 조각은 원작성 숙련자의 활용 횟수로 기록됩니다</figcaption>
+      </figure>
+    </div>
+    <div class="download">
+      <a class="btn btn-ghost" href="mobile.html">휴대폰용 훈련 열기</a>
+      <p>세로 화면에 맞춘 가벼운 버전입니다. 3D 화면은 없지만 계산과 보상 기록은 같습니다.</p>
+    </div>
+    <div class="download">
+      <a class="btn btn-ghost" href="TacitTraining_windows.zip" download>Windows용 프로그램 내려받기</a>
+      <p>약 34MB · 압축을 푼 뒤 TacitTraining.exe 실행 · "Windows의 PC 보호" 창이 뜨면 [추가 정보] → [실행]. 내려받은 프로그램은 웹의 조각 데이터와 이어지지 않습니다.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- 보상 원장 -->
+    <div id="tab-ledger" class="pane single" hidden>
+      <section class="card">
+        <div class="row-head">
+          <h3>숙련자 기여도 보상</h3>
+          <label class="inline">월 인센티브 재원(원) <input id="lg-pool" type="number" min="0" step="100000" value="1000000"></label>
+        </div>
+        <p class="hint">기여 점수 = Σ 활용 횟수 × (불량 완화율 + 다운타임 완화율). 배분액 = 재원 × 점수 지분.</p>
+        <div id="lg-bars"></div>
+        <div class="scroll"><table id="lg-table"></table></div>
+      </section>
+      <section class="card" id="share-card">
+        <div class="row-head">
+          <h3>노하우 공유</h3>
+        </div>
+        <p class="hint">아래 "등록된 조각"에서 <b>링크 복사</b>를 눌러 팀원에게 보내세요. 받은 사람이 링크를 열면 같은 조각이 자기 화면과 3D 공장에 들어갑니다. 서버 없이 링크에 내용이 담깁니다.</p>
+        <form id="share-form" class="share-form">
+          <input id="share-in" type="text" placeholder="공유받은 링크나 코드를 붙여 넣으세요" autocomplete="off">
+          <button class="ghost" type="submit">가져오기</button>
+        </form>
+        <p class="hint share-msg" id="share-msg" role="status"></p>
+      </section>
+      <section class="card">
+        <div class="row-head">
+          <h3>등록된 조각</h3>
+          <button class="ghost" id="lg-reset" type="button">데모 데이터로 초기화</button>
+        </div>
+        <div class="scroll"><table id="lg-rules"></table></div>
+      </section>
+    </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section alt" id="background">
   <div class="wrap">
     <p class="kicker">사회적 배경</p>
-    <h2>울산 제조 현장은 가장 빨리 늙고, 배울 사람은 들어오지 않습니다</h2>
-    <p class="section-lede">남은 노하우는 기록되지 않은 채 사라지고 있습니다. 수치는 모두 공개 자료에서 가져왔고, 출처를 눌러 확인할 수 있습니다.</p>
+    <h2>울산 제조 현장은 빨리 늙고, 배울 사람은 들어오지 않습니다</h2>
+    <div class="bsum">
+      <div><b class="cnt" data-to="43" data-dec="0" data-suffix="%">43%</b><span>울산 제조업 근로자 중 50대 이상 (2023년, 전국 38%)</span></div>
+      <div><b class="cnt" data-to="2.1" data-dec="1" data-suffix="배">2.1배</b><span>뿌리산업 부족 인원, 9년 사이</span></div>
+      <div><b class="cnt" data-to="53.4" data-dec="1" data-suffix="세">53.4세</b><span>대한민국명장 평균 연령</span></div>
+      <div><b class="cnt" data-to="16" data-dec="1" data-suffix="%">16.0%</b><span>제조업 미충원율 (2025년 하반기)</span></div>
+    </div>
+    <p class="evid-open"><button type="button" class="btn btn-ref" data-open="evidence" data-to="ev-bg">참고문헌 바로가기</button></p>
+  </div>
+</section>
+
+<section class="section" id="problem">
+  <div class="wrap">
+    <p class="kicker">문제</p>
+    <h2>노하우는 사람과 함께 퇴근하고, 결국 은퇴합니다</h2>
+    <p class="section-lede">작업표준서에는 조건값만 있습니다. 무엇부터 확인하고 어떤 순서로 조치하는지는 숙련자의 머릿속에만 있습니다.</p>
+    <div class="stats" id="stats"></div>
+    <div class="pgrid pshort">
+      <article class="pcard"><span class="pno">01</span><h3>노하우가 문서에 없습니다</h3><p>표준서에는 조건값만 있고, 확인 순서는 숙련자 머릿속에만 있습니다.</p></article>
+      <article class="pcard"><span class="pno">02</span><h3>교대 때 맥락이 끊깁니다</h3><p>인수인계가 "특이사항 없음" 한 줄로 줄어듭니다.</p></article>
+      <article class="pcard"><span class="pno">03</span><h3>숫자로 남지 않는 신호가 있습니다</h3><p>소리, 냄새, 진동으로 알아채는 판단은 어디에도 기록되지 않습니다.</p></article>
+      <article class="pcard"><span class="pno">04</span><h3>이어받을 사람이 줄고 있습니다</h3><p>울산 제조업 근로자의 43%가 50대 이상입니다.</p></article>
+      <article class="pcard"><span class="pno">05</span><h3>내놓을 이유가 없습니다</h3><p>노하우를 내놓아도 숙련자에게 돌아오는 것이 없습니다.</p></article>
+    </div>
+    <p class="evid-open"><button type="button" class="btn btn-ref" data-open="evidence" data-to="ev-pr">참고문헌 바로가기</button></p>
+  </div>
+</section>
+
+<section class="section alt" id="how">
+  <div class="wrap">
+    <p class="kicker">서비스</p>
+    <h2>기록하고, 안내하고, 보상합니다</h2>
+    <div class="steps">
+      <article class="step"><span class="step-no">01</span><h3>말로 남기는 기록</h3><p>30초 말하면 AI가 증상, 확인 순서, 원인, 조치로 정리하고, 숙련자가 확인해야 등록됩니다.</p></article>
+      <article class="step"><span class="step-no">02</span><h3>본 그대로 찾는 안내</h3><p>"하얀 물결 같은 게 생겨요"처럼 써도 해당 노하우를 찾아 줍니다.</p></article>
+      <article class="step"><span class="step-no">03</span><h3>끊기지 않는 교대 인수인계 <span class="tag-prop">제안</span></h3><p>교대 직전 30초 말로 남기면 다음 조가 설비별 카드로 확인합니다.</p></article>
+      <article class="step"><span class="step-no">04</span><h3>감각 신호의 기록 <span class="tag-prop">제안</span></h3><p>"소리가 둔해졌다" 같은 감각을 말과 10초 녹음으로 남깁니다.</p></article>
+      <article class="step"><span class="step-no">05</span><h3>가치 산정</h3><p>조각을 따랐을 때와 아닐 때의 불량률과 다운타임을 비교합니다.</p></article>
+      <article class="step"><span class="step-no">06</span><h3>쓰일 때마다 돌아가는 보상</h3><p>안내마다 원작성자를 표시하고, 활용될 때마다 보상 근거가 쌓입니다.</p></article>
+    </div>
+    <p class="proto-note">"제안" 표시는 아직 아래 체험에 들어 있지 않은 기능입니다. 언어 모델은 숙련자가 말한 것만 정리하고, 판정과 계산은 규칙이 맡습니다.</p>
+    <p class="evid-open"><button type="button" class="btn btn-ref" data-open="evidence" data-to="ev-how">서비스 상세 · AI 역할 보기</button></p>
+  </div>
+</section>
+
+<section class="section" id="reward">
+  <div class="wrap">
+    <p class="kicker">보상</p>
+    <h2>박 조장이 노하우를 내놓을 이유</h2>
+    <p class="section-lede">아래는 기본안입니다. 비율과 기간은 현장 인터뷰로 검증해 고칠 값입니다.</p>
+    <div class="scroll">
+      <table class="roles">
+        <thead><tr><th>항목</th><th>기본안</th></tr></thead>
+        <tbody>
+          <tr><td>활용 1회 기준</td><td>안내된 조각을 작업자가 "따랐어요"로 확인한 건</td></tr>
+          <tr><td>부풀리기 방지</td><td>같은 작업자·같은 조각은 하루 1회만 집계하고, 본인 조각을 본인이 쓴 것은 제외</td></tr>
+          <tr><td>권리</td><td>회사는 사용할 권리, 숙련자는 보상받을 권리</td></tr>
+          <tr><td>재원</td><td>줄어든 불량 비용의 일정 비율(예: 10%)을 매달 적립해 활용 지분대로 배분</td></tr>
+          <tr><td>퇴직 후</td><td>퇴직 후에도 일정 기간(예: 3년) 지급</td></tr>
+          <tr><td>돈 이외</td><td>조각마다 작성자 표시, 인사 평가와 정년 후 재고용 판단에 반영</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="effects">
+  <div class="wrap">
+    <p class="kicker">기대효과</p>
+    <h2>신입은 혼자서도 대응하고, 숙련자는 은퇴 후에도 인정받습니다</h2>
+    <p class="section-lede">숫자로 남지 않던 판단까지 기업의 자산으로 남기는 방식입니다. 아래는 기대하는 효과이며, 현장 검증으로 확인할 값입니다.</p>
+    <div class="scroll">
+      <table class="roles eff">
+        <thead><tr><th>대상</th><th>기대효과</th></tr></thead>
+        <tbody>
+          <tr><td>신입 작업자</td><td>야간·주말에도 1차 대응 가능, 용어를 몰라도 검색, 대응 시간 단축</td></tr>
+          <tr><td>교대조</td><td>앞 조가 느낀 이상 징후를 이어받아 같은 문제를 반복하지 않음</td></tr>
+          <tr><td>숙련자</td><td>야간 호출 감소, 노하우 활용만큼 보상, 퇴직 후에도 기여 인정</td></tr>
+          <tr><td>협력사</td><td>불량과 라인 정지 시간 감소, 노하우의 자산화, 신입 교육 기간 단축</td></tr>
+          <tr><td>데이터 자산</td><td>소리·냄새 같은 감각 판단이 결과와 함께 쌓여 향후 이상 감지 모델의 학습 데이터가 됨</td></tr>
+          <tr><td>지역·산업</td><td>가장 빠르게 늙는 울산 제조 현장의 숙련 기술 보존, 영세 협력사의 저비용 AI 도입 사례</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="expand">사출 공정에서 시작하지만, 증상·확인 순서·원인·조치라는 기록 구조는 공정과 관계없이 같아서 프레스·용접 등 다른 뿌리공정과 다른 협력사로 넓힐 수 있습니다. 자동차 부품 제조업은 전국 8,668개 사업체, 종사자 25만 700명 규모입니다(2025년 6월). <button type="button" class="ref-go" data-open="evidence" data-to="ev-mk">참고문헌 바로가기</button></p>
+  </div>
+</section>
+
+<section class="section" id="diff">
+  <div class="wrap">
+    <p class="kicker">차별점</p>
+    <blockquote class="quote">사람을 연결하는 것이 아니라 지식을 남깁니다.<br>숙련자가 은퇴해도 노하우는 현장에 남고, 쓰일 때마다 보상이 돌아갑니다.</blockquote>
+    <div class="scroll"><table class="compare" id="compare"></table></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <p class="foot-note">이 페이지는 공모전 제출용 데모입니다. 대화는 규칙 기반으로 동작하며(실제 서비스에서는 언어 모델이 담당), 불량률·보상액과 조각 내용은 예시 가정값입니다. 등록한 내용은 이 브라우저에만 저장됩니다.</p>
+    <details class="sources">
+      <summary>통계와 참고 자료 출처</summary>
+      <ul id="sources"></ul>
+    </details>
+    <p class="foot-meta" id="contest"></p>
+  </div>
+</footer>
+
+<dialog id="evidence" class="evid" aria-label="근거와 참고문헌">
+  <div class="evid-head">
+    <strong>근거 · 참고문헌</strong>
+    <nav class="evid-nav"><a href="#ev-bg">사회적 배경</a><a href="#ev-pr">문제 근거</a><a href="#ev-how">서비스 상세</a><a href="#ev-ai">AI 역할</a><a href="#ev-mk">시장 규모</a></nav>
+    <button type="button" class="evid-x" data-close aria-label="닫기">닫기 ✕</button>
+  </div>
+  <div class="evid-body">
+    <h2 id="ev-bg" class="evid-h">사회적 배경</h2>
+    <p class="evid-lede">수치는 모두 공개 자료에서 가져왔고, 출처를 눌러 확인할 수 있습니다.</p>
+    
+    
 
     <div class="bgrid">
       <article class="bcard">
@@ -204,15 +498,10 @@
         </div>
       </article>
     </div>
-  </div>
-</section>
-
-<section class="section" id="problem">
-  <div class="wrap">
-    <p class="kicker">문제</p>
-    <h2>노하우는 사람과 함께 퇴근하고, 결국 은퇴합니다</h2>
-    <p class="section-lede">작업표준서에는 조건값만 있습니다. 무엇부터 확인하고 어떤 순서로 조치하는지는 숙련자의 머릿속에만 있습니다.</p>
-    <div class="stats" id="stats"></div>
+  
+    <h2 id="ev-pr" class="evid-h">문제 근거</h2>
+    
+    
 
     <div class="case">
       <p class="case-k">예시 상황</p>
@@ -263,13 +552,8 @@
         </tbody>
       </table>
     </div>
-  </div>
-</section>
-
-<section class="section alt" id="how">
-  <div class="wrap">
-    <p class="kicker">서비스</p>
-    <h2>기록하고, 안내하고, 보상합니다</h2>
+  
+    <h2 id="ev-how" class="evid-h">서비스 상세</h2>
     <div class="steps">
       <article class="step">
         <span class="step-no">01</span>
@@ -302,9 +586,10 @@
         <p>모든 안내에 원작성자를 표시하고, 신입이 노하우를 따른 기록을 보상 근거로 쌓습니다. 회사는 노하우를 사용할 권리를, 숙련자는 보상받을 권리를 갖는 직무발명보상제도와 같은 구조입니다. 보상은 줄어든 불량 비용 안에서 지급하고, 퇴직 후에도 일정 기간 이어지게 합니다.</p>
       </article>
     </div>
-    <p class="proto-note">"제안" 표시는 아직 아래 체험에 들어 있지 않은 기능입니다. 체험에서는 기록, 안내, 가치 산정, 보상 원장을 직접 눌러 볼 수 있습니다.</p>
-
-    <h3 class="sub-h">AI는 어디서 무슨 일을 하나</h3>
+    
+    <p class="proto-note">"제안" 표시는 아직 체험에 들어 있지 않은 기능입니다.</p>
+    <h2 id="ev-ai" class="evid-h">AI 역할</h2>
+    
     <p class="section-lede">언어 모델은 지식을 만들지 않습니다. 숙련자가 말한 것만 정리하고, 원래 말과 작성자를 붙여 찾아 줍니다. 판정과 계산은 규칙이 맡습니다.</p>
     <div class="scroll">
       <table class="roles">
@@ -317,209 +602,15 @@
           <tr><td>보상 계산</td><td>활용 횟수와 배분액 산정</td><td><span class="tag rule">규칙</span></td></tr>
         </tbody>
       </table>
-    </div>
-    <ul class="guards">
-      <li>답은 등록된 조각 안에서만 합니다. 없으면 없다고 답합니다.</li>
-      <li>모든 안내에 숙련자의 원래 말과 작성자를 함께 보여 줍니다.</li>
-      <li>정리한 결과는 숙련자가 확인한 뒤에만 등록됩니다.</li>
-      <li>조치가 승인 범위 안인지 판정하는 일과 보상 계산은 규칙이 맡습니다. 소리 녹음은 처음에는 기록과 검색에만 쓰고 판정에는 쓰지 않습니다.</li>
-      <li>외부 유료 서비스 없이 사내에서 동작해, 공정 노하우가 회사 밖으로 나가지 않습니다.</li>
-    </ul>
+    
+      <h2 id="ev-mk" class="evid-h">시장 규모</h2>
+    <p>자동차 부품 제조업은 전국 8,668개 사업체, 종사자 25만 700명 규모입니다(2025년 6월). 출처: <a href="https://www.hankyung.com/article/202602191114i" target="_blank" rel="noopener">한국경제, 자동차 부품 제조업 산업·일자리 전환 지도(한국고용정보원)</a></p>
   </div>
-</section>
-
-<section class="section" id="demo">
-  <div class="wrap">
-    <p class="kicker">체험</p>
-    <h2>그날 밤을 직접 눌러 보세요</h2>
-    <p class="section-lede">박 조장이 되어 노하우를 남기고, 민준 씨가 되어 야간에 찾아보고, 보상 원장에서 결과를 확인합니다.</p>
-
-    <div class="tabs" role="tablist">
-      <button role="tab" data-tab="interview" aria-selected="true"><b>1</b> 박 조장: 노하우 남기기</button>
-      <button role="tab" data-tab="assist" aria-selected="false"><b>2</b> 민준 씨: 야간에 찾아보기</button>
-      <button role="tab" data-tab="ledger" aria-selected="false"><b>3</b> 보상 원장</button>
-    </div>
-
-    <!-- 숙련자 인터뷰 에이전트 -->
-    <div id="tab-interview" class="pane">
-      <section class="chat-card">
-        <div class="chat-head">
-          <div>
-            <h3>인터뷰 에이전트</h3>
-            <p>짧게 묻거나 30초 말을 받아, 증상 → 확인 순서 → 원인으로 정리합니다</p>
-          </div>
-          <button class="ghost" id="iv-restart" type="button">처음부터</button>
-        </div>
-        <div class="messages" id="iv-messages" aria-live="polite"></div>
-        <div class="choices" id="iv-choices"></div>
-        <form class="composer" id="iv-form">
-          <input id="iv-input" type="text" autocomplete="off" placeholder="답변을 입력하세요" aria-label="답변 입력">
-          <button type="submit">보내기</button>
-        </form>
-      </section>
-      <aside class="side-card">
-        <h3>지금 정리 중인 조각</h3>
-        <dl class="draft" id="iv-draft"></dl>
-        <p class="hint">질문에 답할 때마다 채워집니다. 실명 대신 ID로만 기록합니다.</p>
-      </aside>
-    </div>
-
-    <!-- 신입 작업 도우미 에이전트 -->
-    <div id="tab-assist" class="pane" hidden>
-      <section class="chat-card">
-        <div class="chat-head">
-          <div>
-            <h3>작업 도우미 에이전트</h3>
-            <p>용어를 몰라도 본 대로 적으면 조장이 남긴 확인 순서를 찾아 줍니다</p>
-          </div>
-        </div>
-        <form class="cond" id="as-cond">
-          <label>공정 <select id="as-process"></select></label>
-          <label>외기온도(℃) <input id="as-temp" type="number" value="-3" min="-20" max="45"></label>
-          <label>습도(%) <input id="as-humidity" type="number" value="35" min="0" max="100"></label>
-          <label>설비 연수(년) <input id="as-age" type="number" value="15" min="0" max="50"></label>
-          <label>내 근속(주) <input id="as-tenure" type="number" value="4" min="0" max="520"></label>
-          <div class="presets">
-            <button type="button" class="chip-btn say" data-say="하얀 물결 같은 게 생겨요">"하얀 물결 같은 게 생겨요"</button>
-            <button type="button" class="chip-btn" data-preset="-3,35">한겨울 새벽</button>
-            <button type="button" class="chip-btn" data-preset="24,90">장마철 야간</button>
-            <button type="button" class="chip-btn" data-preset="31,72">열대야</button>
-            <button type="submit">이 상황으로 물어보기</button>
-          </div>
-        </form>
-        <div class="messages" id="as-messages" aria-live="polite"></div>
-        <form class="composer" id="as-form">
-          <input id="as-input" type="text" autocomplete="off" placeholder="예: 하얀 물결 같은 게 생겨요" aria-label="증상이나 상황을 글로 입력">
-          <button type="submit">보내기</button>
-        </form>
-      </section>
-      <aside class="side-card">
-        <h3>예상 불량률</h3>
-        <div id="as-rates"></div>
-        <p class="hint">조각을 따랐다고 기록하면 원작성 숙련자의 활용 횟수가 1 올라갑니다.</p>
-      </aside>
-    </div>
-
-    <!-- 보상 원장 -->
-    <div id="tab-ledger" class="pane single" hidden>
-      <section class="card">
-        <div class="row-head">
-          <h3>숙련자 기여도 보상</h3>
-          <label class="inline">월 인센티브 재원(원) <input id="lg-pool" type="number" min="0" step="100000" value="1000000"></label>
-        </div>
-        <p class="hint">기여 점수 = Σ 활용 횟수 × (불량 완화율 + 다운타임 완화율). 배분액 = 재원 × 점수 지분.</p>
-        <div id="lg-bars"></div>
-        <div class="scroll"><table id="lg-table"></table></div>
-      </section>
-      <section class="card">
-        <div class="row-head">
-          <h3>등록된 조각</h3>
-          <button class="ghost" id="lg-reset" type="button">데모 데이터로 초기화</button>
-        </div>
-        <div class="scroll"><table id="lg-rules"></table></div>
-      </section>
-    </div>
-  </div>
-</section>
-
-<section class="section dark" id="training">
-  <div class="wrap">
-    <p class="kicker">3D 훈련</p>
-    <h2>민준 씨의 그날 밤을 3D 공장에서 서 봅니다</h2>
-    <p class="section-lede">Unity로 만든 자동차 도어 트림 사출 라인입니다. 민준 씨가 되어 현장 에이전트에게 본 대로 말하고, 박 조장의 조각을 따라 100쇼트를 생산해 결과를 비교합니다. 위 체험에서 남긴 조각과 보상 기록이 그대로 이어집니다.</p>
-    <div class="shots">
-      <figure class="shot-main">
-        <img src="shots/symptom.jpg" alt="3D 사출 공장 화면. 민준 씨가 하얀 물결 같은 게 생긴다고 적자 현장 에이전트가 은줄 증상으로 알아듣고 박 조장이 남긴 확인 순서를 보여 준다" loading="lazy" width="1600" height="900">
-        <figcaption>03:16 — 민준 씨가 본 대로 적으면 에이전트가 증상을 알아듣고, 박 조장이 남긴 확인 순서와 원인을 보여 줍니다</figcaption>
-      </figure>
-      <figure>
-        <img src="shots/result.jpg" alt="생산 결과 화면. 작업표준서만 봤을 때와 숙련자 조각을 따랐을 때의 불량 개수를 비교한다" loading="lazy" width="1600" height="900">
-        <figcaption>같은 조건에서 조각을 따르기 전후의 불량 개수를 비교합니다</figcaption>
-      </figure>
-      <figure>
-        <img src="shots/ledger.jpg" alt="숙련자 기여도 보상 원장 화면. 숙련자별 조각 수, 활용 횟수, 배분액이 표시된다" loading="lazy" width="1600" height="900">
-        <figcaption>따른 조각은 원작성 숙련자의 활용 횟수로 기록됩니다</figcaption>
-      </figure>
-    </div>
-    <div class="download">
-      <a class="btn" href="training/">PC에서 3D로 실행</a>
-      <p>설치 없이 PC 브라우저에서 열립니다(처음 불러올 때 수십 초). 위 체험에서 등록한 조각이 3D 공장에 그대로 나타나고, 훈련에서 따른 기록은 이 페이지의 보상 원장에 반영됩니다.</p>
-    </div>
-    <div class="download">
-      <a class="btn btn-ghost" href="mobile.html">휴대폰용 훈련 열기</a>
-      <p>세로 화면에 맞춘 가벼운 버전입니다. 3D 화면은 없지만 계산과 보상 기록은 같습니다.</p>
-    </div>
-    <div class="download">
-      <a class="btn btn-ghost" href="TacitTraining_windows.zip" download>Windows용 프로그램 내려받기</a>
-      <p>약 34MB · 압축을 푼 뒤 TacitTraining.exe 실행 · "Windows의 PC 보호" 창이 뜨면 [추가 정보] → [실행]. 내려받은 프로그램은 웹의 조각 데이터와 이어지지 않습니다.</p>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="reward">
-  <div class="wrap">
-    <p class="kicker">보상</p>
-    <h2>박 조장이 노하우를 내놓을 이유</h2>
-    <p class="section-lede">아래는 기본안입니다. 비율과 기간은 현장 인터뷰로 검증해 고칠 값입니다.</p>
-    <div class="scroll">
-      <table class="roles">
-        <thead><tr><th>항목</th><th>기본안</th></tr></thead>
-        <tbody>
-          <tr><td>활용 1회 기준</td><td>안내된 조각을 작업자가 "따랐어요"로 확인한 건</td></tr>
-          <tr><td>부풀리기 방지</td><td>같은 작업자·같은 조각은 하루 1회만 집계하고, 본인 조각을 본인이 쓴 것은 제외</td></tr>
-          <tr><td>권리</td><td>회사는 사용할 권리, 숙련자는 보상받을 권리</td></tr>
-          <tr><td>재원</td><td>줄어든 불량 비용의 일정 비율(예: 10%)을 매달 적립해 활용 지분대로 배분</td></tr>
-          <tr><td>퇴직 후</td><td>퇴직 후에도 일정 기간(예: 3년) 지급</td></tr>
-          <tr><td>돈 이외</td><td>조각마다 작성자 표시, 인사 평가와 정년 후 재고용 판단에 반영</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section class="section alt" id="effects">
-  <div class="wrap">
-    <p class="kicker">기대효과</p>
-    <h2>신입은 혼자서도 대응하고, 숙련자는 은퇴 후에도 인정받습니다</h2>
-    <p class="section-lede">숫자로 남지 않던 판단까지 기업의 자산으로 남기는 방식입니다. 아래는 기대하는 효과이며, 현장 검증으로 확인할 값입니다.</p>
-    <div class="scroll">
-      <table class="roles eff">
-        <thead><tr><th>대상</th><th>기대효과</th></tr></thead>
-        <tbody>
-          <tr><td>신입 작업자</td><td>야간·주말에도 1차 대응 가능, 용어를 몰라도 검색, 대응 시간 단축</td></tr>
-          <tr><td>교대조</td><td>앞 조가 느낀 이상 징후를 이어받아 같은 문제를 반복하지 않음</td></tr>
-          <tr><td>숙련자</td><td>야간 호출 감소, 노하우 활용만큼 보상, 퇴직 후에도 기여 인정</td></tr>
-          <tr><td>협력사</td><td>불량과 라인 정지 시간 감소, 노하우의 자산화, 신입 교육 기간 단축</td></tr>
-          <tr><td>데이터 자산</td><td>소리·냄새 같은 감각 판단이 결과와 함께 쌓여 향후 이상 감지 모델의 학습 데이터가 됨</td></tr>
-          <tr><td>지역·산업</td><td>가장 빠르게 늙는 울산 제조 현장의 숙련 기술 보존, 영세 협력사의 저비용 AI 도입 사례</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="expand">사출 공정에서 시작하지만, 증상·확인 순서·원인·조치라는 기록 구조는 공정과 관계없이 같아서 프레스·용접 등 다른 뿌리공정과 다른 협력사로 넓힐 수 있습니다. 자동차 부품 제조업은 전국 8,668개 사업체, 종사자 25만 700명 규모입니다(2025년 6월). <a href="https://www.hankyung.com/article/202602191114i" target="_blank" rel="noopener">한국경제, 자동차 부품 제조업 산업·일자리 전환 지도(한국고용정보원)</a></p>
-  </div>
-</section>
-
-<section class="section" id="diff">
-  <div class="wrap">
-    <p class="kicker">차별점</p>
-    <blockquote class="quote">사람을 연결하는 것이 아니라 지식을 남깁니다.<br>숙련자가 은퇴해도 노하우는 현장에 남고, 쓰일 때마다 보상이 돌아갑니다.</blockquote>
-    <div class="scroll"><table class="compare" id="compare"></table></div>
-  </div>
-</section>
-
-<footer class="footer">
-  <div class="wrap">
-    <p class="foot-note">이 페이지는 공모전 제출용 데모입니다. 대화는 규칙 기반으로 동작하며(실제 서비스에서는 언어 모델이 담당), 불량률·보상액과 조각 내용은 예시 가정값입니다. 등록한 내용은 이 브라우저에만 저장됩니다.</p>
-    <details class="sources">
-      <summary>통계와 참고 자료 출처</summary>
-      <ul id="sources"></ul>
-    </details>
-    <p class="foot-meta" id="contest"></p>
-  </div>
-</footer>
-
+</dialog>
 <script src="data.js"></script>
 <script src="sim.js"></script>
 <script src="app.js"></script>
+
+
 </body>
 </html>

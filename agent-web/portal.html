@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>손끝 원장 업무 포털</title>
+<link rel="stylesheet" href="portal.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="side">
+    <a class="brand" href="portal.html#/dash"><span class="logo" aria-hidden="true"></span><span><b>손끝 원장</b><small>현장 노하우 공유 포털</small></span></a>
+    <nav id="menu" aria-label="포털 메뉴"></nav>
+    <div class="side-foot">
+      <a href="index.html">← 서비스 소개로</a>
+      <small>시연용 화면입니다. 데이터는 이 브라우저에만 저장됩니다.</small>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <button type="button" class="menu-btn" id="menu-btn" aria-label="메뉴 열기">☰</button>
+      <h1 id="page-title">대시보드</h1>
+      <div class="role" role="group" aria-label="역할 전환">
+        <span class="role-label">역할</span>
+        <button type="button" data-role="admin">관리자</button>
+        <button type="button" data-role="expert">숙련자</button>
+        <button type="button" data-role="worker">신입</button>
+      </div>
+      <div class="who" id="who"></div>
+    </header>
+    <main class="view" id="view"></main>
+  </div>
+</div>
+
+<dialog id="detail" class="detail"></dialog>
+
+<script src="data.js"></script>
+<script src="sim.js"></script>
+<script src="portal.js"></script>
+</body>
+</html>

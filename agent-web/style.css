@@ -449,3 +449,85 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 .glow:hover::after { opacity: 1; }
 .fx .rv.in:hover { transition-delay: 0ms; }
 @media (prefers-reduced-motion: reduce) { .hero .embers { display: none; } }
+
+/* ---------- 근거·참고문헌 창 ---------- */
+.nav-evid { font: inherit; font-size: 13px; font-weight: 700; color: #fff; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.28); border-radius: 999px; padding: 5px 13px; cursor: pointer; transition: background .2s ease, border-color .2s ease; }
+.nav-evid:hover { background: rgba(255,255,255,0.2); border-color: #fff; }
+@media (max-width: 640px) { .nav-links { display: flex; margin-left: auto; } .nav-links a { display: none; } .nav-evid { font-size: 12px; padding: 5px 10px; } .nav .btn-small { margin-left: 8px; } }
+.bsum { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 32px; }
+.bsum > div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+.bsum b { display: block; font-size: 40px; line-height: 1.1; letter-spacing: -0.03em; color: var(--accent-ink); }
+.bsum span { display: block; margin-top: 8px; font-size: 14px; color: var(--ink-2); }
+@media (max-width: 860px) { .bsum { grid-template-columns: repeat(2, minmax(0, 1fr)); } .bsum b { font-size: 32px; } }
+.evid-open { margin-top: 28px; }
+.pshort .pcard:nth-child(5) { grid-column: auto; }
+dialog.evid { width: min(1040px, calc(100vw - 24px)); max-height: calc(100vh - 32px); padding: 0; border: 0; border-radius: 16px; background: var(--bg, #f6f5f1); color: var(--ink, #14181f); box-shadow: 0 30px 80px rgba(0,0,0,.45); overflow: hidden; }
+dialog.evid[open] { display: flex; flex-direction: column; animation: evid-in .28s ease; }
+dialog.evid::backdrop { background: rgba(10,14,20,.62); backdrop-filter: blur(3px); }
+@keyframes evid-in { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+.evid-head { display: flex; align-items: center; gap: 16px; padding: 14px 20px; background: #0e131a; color: #fff; flex: none; }
+.evid-nav { display: flex; gap: 14px; margin-left: 8px; flex-wrap: wrap; font-size: 14px; }
+.evid-nav a { color: rgba(255,255,255,.75); text-decoration: none; }
+.evid-nav a:hover { color: #fff; }
+.evid-x { margin-left: auto; font: inherit; font-size: 14px; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; padding: 5px 14px; cursor: pointer; }
+.evid-body { overflow-y: auto; padding: 8px 24px 36px; scroll-behavior: smooth; }
+.evid-h { font-size: 24px; margin: 28px 0 8px; letter-spacing: -0.02em; }
+.evid-lede { color: var(--ink-2); margin-bottom: 8px; }
+@media (max-width: 640px) { .evid-head { flex-wrap: wrap; } .evid-body { padding: 4px 14px 28px; } }
+.ref-go { font: inherit; font-size: 13px; font-weight: 700; color: var(--accent-ink); background: transparent; border: 1px solid currentColor; border-radius: 999px; padding: 2px 10px; cursor: pointer; vertical-align: 1px; }
+.ref-go:hover { background: var(--accent-ink); color: #fff; }
+
+.sumgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.sumcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; min-width: 0; }
+.sumno { display: inline-block; font-size: 13px; font-weight: 800; color: var(--accent-ink); letter-spacing: 0.06em; }
+.sumcard h3 { font-size: 19px; margin: 8px 0; letter-spacing: -0.02em; line-height: 1.35; }
+.sumcard p, .sumcard li { color: var(--ink-2); font-size: 15px; }
+.sumcard ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+.sumcard li b { color: var(--ink, #14181f); margin-right: 4px; }
+.sumstory { margin-top: 22px; padding: 16px 20px; border-left: 4px solid var(--accent); background: rgba(240,106,26,0.06); border-radius: 8px; color: var(--ink-2); font-size: 15px; }
+.sumstory b { color: var(--ink, #14181f); margin-right: 8px; }
+@media (max-width: 860px) { .sumgrid { grid-template-columns: minmax(0, 1fr); } }
+.btn-ref { display: inline-block; font: inherit; font-weight: 700; font-size: 15px; color: var(--ink, #14181f); background: #fff; border: 1.5px solid var(--ink, #14181f); border-radius: 999px; padding: 10px 20px; cursor: pointer; transition: background .2s ease, color .2s ease; }
+.btn-ref:hover { background: var(--ink, #14181f); color: #fff; }
+
+/* 체험 안의 3D 훈련 탭 (어두운 카드) */
+.train-card { background: var(--night); color: #fff; border: 0; }
+.train-card h3 { font-size: 22px; letter-spacing: -0.02em; }
+.train-lede { margin-top: 8px; color: rgba(255,255,255,0.75); font-size: 15px; }
+.train-card .shots { margin-top: 24px; }
+.train-card .download { margin-top: 22px; }
+.train-card .btn-ghost { color: #fff; }
+.train-card .top-cta { margin: 18px 0 0; }
+.train-card .top-cta .btn { font-size: 17px; padding: 14px 28px; }
+
+/* 페이지 안에서 바로 여는 3D 공장 */
+.stage { position: relative; aspect-ratio: 16 / 9; margin-top: 20px; border-radius: 14px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.12); }
+.stage img, .stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; display: block; }
+.stage img { filter: brightness(.55); transition: filter .3s ease; }
+.stage:hover img { filter: brightness(.7); }
+.stage-go { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font: inherit; font-size: 20px; font-weight: 800; color: #fff; background: var(--accent); border: 0; border-radius: 999px; padding: 18px 34px; cursor: pointer; box-shadow: 0 10px 40px rgba(240,106,26,.45); animation: stage-pulse 2s ease-in-out infinite; }
+@keyframes stage-pulse { 50% { box-shadow: 0 10px 60px rgba(240,106,26,.8); transform: translate(-50%, -50%) scale(1.04); } }
+.stage-full { position: absolute; right: 10px; top: 10px; z-index: 2; font: inherit; font-size: 13px; font-weight: 700; color: #fff; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.4); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.stage-tip { margin-top: 12px; font-size: 14px; color: rgba(255,255,255,.75); }
+.stage-tip b { color: #fff; }
+@media (prefers-reduced-motion: reduce) { .stage-go { animation: none; } }
+
+/* 태블릿 모양 (웹 에이전트) */
+.tablet { position: relative; margin-top: 28px; padding: 22px 14px 30px; background: #0c0f14; border-radius: 34px; box-shadow: 0 30px 70px rgba(18,22,28,.28), inset 0 0 0 2px #262b34; }
+.tablet::before { content: ""; position: absolute; left: 50%; top: 8px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: #2a303a; }
+.tablet::after { content: ""; position: absolute; left: 50%; bottom: 11px; width: 120px; height: 4px; margin-left: -60px; border-radius: 4px; background: #3a4150; }
+.tablet-screen { background: var(--page, #f6f5f1); border-radius: 18px; padding: 8px 18px 20px; overflow: hidden; }
+.tablet-screen .tabs { margin-top: 12px; }
+@media (max-width: 640px) { .tablet { padding: 16px 8px 22px; border-radius: 24px; } .tablet-screen { padding: 4px 10px 14px; } }
+
+/* 노하우 공유 */
+.share-form { display: flex; gap: 10px; margin-top: 12px; }
+.share-form input { flex: 1; min-width: 0; font: inherit; font-size: 15px; padding: 10px 12px; border: 1px solid rgba(0,0,0,.2); border-radius: 8px; background: #fff; color: inherit; }
+.share-msg { min-height: 1.4em; margin-top: 10px; }
+.share-msg.ok { color: #0a6b2c; }
+.share-msg.err { color: #b3261e; }
+.share-btn { padding: 6px 10px; font-size: 13px; white-space: nowrap; }
+.share-toast { position: fixed; left: 50%; bottom: 24px; z-index: 100000; transform: translateX(-50%); max-width: min(560px, calc(100vw - 32px)); padding: 14px 18px; border-radius: 12px; background: #14181f; color: #fff; font-size: 15px; line-height: 1.5; box-shadow: 0 14px 44px rgba(0,0,0,.4); border-left: 5px solid #1e9e4a; transition: opacity .5s ease, transform .5s ease; }
+.share-toast.err { border-left-color: #e5484d; }
+.share-toast.out { opacity: 0; transform: translateX(-50%) translateY(12px); }
+.share-toast button { margin-left: 8px; font: inherit; font-size: 14px; font-weight: 700; color: #14181f; background: #ffb86b; border: 0; border-radius: 999px; padding: 5px 12px; cursor: pointer; }
