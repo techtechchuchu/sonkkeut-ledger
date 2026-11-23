@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>야간 교대 훈련 (휴대폰용) — 손끝 원장</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+
+<header class="m-top">
+  <a class="m-back" href="./#training" aria-label="웹페이지로 돌아가기">←</a>
+  <div>
+    <h1>김민준 씨의 야간 교대</h1>
+    <p>입사 4주차 · 도어 트림 사출 · 박 조장 부재</p>
+  </div>
+</header>
+
+<main class="m-wrap">
+
+  <section class="m-card">
+    <h2><span class="m-no">1</span> 오늘 밤 현장</h2>
+    <div class="m-chips" id="presets">
+      <button type="button" data-preset="-3,35">한겨울 새벽</button>
+      <button type="button" data-preset="24,90">장마철 야간</button>
+      <button type="button" data-preset="31,72">열대야</button>
+    </div>
+    <div class="m-sliders">
+      <label>외기온도 <output id="o-temp"></output><input id="s-temp" type="range" min="-10" max="40" step="1"></label>
+      <label>습도 <output id="o-humidity"></output><input id="s-humidity" type="range" min="20" max="95" step="1"></label>
+      <label>설비 사용연수 <output id="o-age"></output><input id="s-age" type="range" min="0" max="35" step="1"></label>
+      <label>내 근속 <output id="o-tenure"></output><input id="s-tenure" type="range" min="0" max="52" step="1"></label>
+    </div>
+  </section>
+
+  <section class="m-card">
+    <h2><span class="m-no">2</span> 박 조장이 남긴 확인 순서</h2>
+    <p class="m-hint">오늘 밤 조건에서 생기기 쉬운 증상과 확인 순서입니다. 따를 것을 고르세요. 고르지 않으면 작업표준서만 보고 생산합니다.</p>
+    <div id="frags" class="m-frags"></div>
+    <div id="rates" class="m-rates"></div>
+  </section>
+
+  <section class="m-card">
+    <h2><span class="m-no">3</span> 도어 트림 100쇼트 생산</h2>
+    <div class="m-machine" id="machine" aria-hidden="true">
+      <span class="mm-platen fixed"></span>
+      <span class="mm-platen moving"></span>
+      <span class="mm-barrel"></span>
+      <span class="mm-hopper"></span>
+    </div>
+    <div class="m-grid" id="grid" role="img" aria-label="생산된 부품 100개. 붉은 칸은 불량"></div>
+    <p class="m-status" id="status" aria-live="polite">준비되면 생산을 시작하세요.</p>
+    <button type="button" class="m-primary" id="run">100쇼트 생산 시작</button>
+  </section>
+
+  <section class="m-card" id="result" hidden>
+    <h2>생산 결과</h2>
+    <p class="m-big" id="r-big"></p>
+    <p id="r-compare"></p>
+    <p class="m-credit" id="r-credit"></p>
+    <h3>숙련자 기여도 보상 원장</h3>
+    <div id="ledger"></div>
+    <div class="m-actions">
+      <button type="button" class="m-primary" id="again">다시 생산</button>
+      <a class="m-secondary" href="./#demo">웹에서 전체 원장 보기</a>
+    </div>
+  </section>
+
+  <p class="m-foot">휴대폰용 간이 버전입니다. 3D 공장은 PC 브라우저에서 볼 수 있습니다. 수치는 예시 가정값이며, 기록은 이 브라우저에만 저장됩니다.</p>
+</main>
+
+<script src="data.js"></script>
+<script src="sim.js"></script>
+<script src="mobile.js"></script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+
+===== CHARACTER INSPECT =====
+body loaded: True
+body avatar: Superhero_Male_FullBodyAvatar valid=True human=True
+SMR Eyebrows: verts=646 subMeshes=1 bones=65 bounds=(0.12, 0.04, 0.03) materials=Default-Material
+  root=root
+SMR Eyes: verts=556 subMeshes=1 bones=65 bounds=(0.10, 0.03, 0.03) materials=Default-Material
+  root=root
+SMR SuperHero_Male: verts=7275 subMeshes=1 bones=65 bounds=(1.86, 0.29, 1.82) materials=Default-Material
+  root=root
+hierarchy:
+Superhero_Male_FullBody
+  Armature
+    root
+      pelvis
+        spine_01
+          spine_02
+            spine_03
+              clavicle_l
+                upperarm_l
+                  lowerarm_l
+                    hand_l
+                      index_01_l
+                        index_02_l
+                          index_03_l
+                            index_04_leaf_l
+                      middle_01_l
+                        middle_02_l
+                          middle_03_l
+                            middle_04_leaf_l
+                      pinky_01_l
+                        pinky_02_l
+                          pinky_03_l
+                            pinky_04_leaf_l
+                      ring_01_l
+                        ring_02_l
+                          ring_03_l
+                            ring_04_leaf_l
+                      thumb_01_l
+                        thumb_02_l
+                          thumb_03_l
+                            thumb_04_leaf_l
+              clavicle_r
+                upperarm_r
+                  lowerarm_r
+                    hand_r
+                      index_01_r
+                        index_02_r
+                          index_03_r
+                            index_04_leaf_r
+                      middle_01_r
+                        middle_02_r
+                          middle_03_r
+                            middle_04_leaf_r
+                      pinky_01_r
+                        pinky_02_r
+                          pinky_03_r
+                            pinky_04_leaf_r
+                      ring_01_r
+                        ring_02_r
+                          ring_03_r
+                            ring_04_leaf_r
+                      thumb_01_r
+                        thumb_02_r
+                          thumb_03_r
+                            thumb_04_leaf_r
+              neck_01
+                Head
+        thigh_l
+          calf_l
+            foot_l
+              ball_l
+                ball_leaf_l
+        thigh_r
+          calf_r
+            foot_r
+              ball_r
+                ball_leaf_r
+  Eyebrows  [SMR]
+  Eyes  [SMR]
+  SuperHero_Male  [SMR]
+UAL avatar: UAL1_StandardAvatar valid=True human=True
+UAL clips: 43
+  Armature|A_TPose  2.50s  loop=False  human=True
+  Armature|Crouch_Fwd_Loop  2.00s  loop=True  human=True
+  Armature|Crouch_Idle_Loop  2.93s  loop=True  human=True
+  Armature|Dance_Loop  1.00s  loop=True  human=True
+  Armature|Death01  2.40s  loop=False  human=True
+  Armature|Driving_Loop  1.67s  loop=True  human=True
+  Armature|Fixing_Kneeling  5.20s  loop=False  human=True
+  Armature|Hit_Chest  0.33s  loop=False  human=True
+  Armature|Hit_Head  0.43s  loop=False  human=True
+  Armature|Idle_Loop  2.50s  loop=True  human=True
+  Armature|Idle_Talking_Loop  2.93s  loop=True  human=True
+  Armature|Idle_Torch_Loop  1.27s  loop=True  human=True
+  Armature|Interact  2.00s  loop=False  human=True
+  Armature|Jog_Fwd_Loop  0.93s  loop=True  human=True
+  Armature|Jump_Land  1.27s  loop=False  human=True
+  Armature|Jump_Loop  2.50s  loop=True  human=True
+  Armature|Jump_Start  1.33s  loop=False  human=True
+  Armature|PickUp_Table  0.83s  loop=False  human=True
+  Armature|Pistol_Aim_Down  0.17s  loop=False  human=True
+  Armature|Pistol_Aim_Neutral  0.17s  loop=False  human=True
+  Armature|Pistol_Aim_Up  0.17s  loop=False  human=True
+  Armature|Pistol_Idle_Loop  1.67s  loop=True  human=True
+  Armature|Pistol_Reload  1.67s  loop=False  human=True
+  Armature|Pistol_Shoot  0.63s  loop=False  human=True
+  Armature|Punch_Cross  1.00s  loop=False  human=True
+  Armature|Punch_Jab  0.87s  loop=False  human=True
+  Armature|Push_Loop  2.67s  loop=True  human=True
+  Armature|Roll  1.47s  loop=False  human=True
+  Armature|Sitting_Enter  1.30s  loop=False  human=True
+  Armature|Sitting_Exit  1.03s  loop=False  human=True
+  Armature|Sitting_Idle_Loop  1.67s  loop=True  human=True
+  Armature|Sitting_Talking_Loop  2.93s  loop=True  human=True
+  Armature|Spell_Simple_Enter  0.53s  loop=False  human=True
+  Armature|Spell_Simple_Exit  0.43s  loop=False  human=True
+  Armature|Spell_Simple_Idle_Loop  2.10s  loop=True  human=True
+  Armature|Spell_Simple_Shoot  0.50s  loop=False  human=True
+  Armature|Sprint_Loop  0.67s  loop=True  human=True
+  Armature|Swim_Fwd_Loop  1.33s  loop=True  human=True
+  Armature|Swim_Idle_Loop  3.33s  loop=True  human=True
+  Armature|Sword_Attack  1.53s  loop=False  human=True
+  Armature|Sword_Idle  1.67s  loop=True  human=True
+  Armature|Walk_Formal_Loop  1.33s  loop=True  human=True
+  Armature|Walk_Loop  1.33s  loop=True  human=True
+Hair_Buzzed.fbx MR Hair_Buzzed
+Hair_SimpleParted.fbx MR Hair_SimpleParted
+Hair_Beard.fbx MR Hair_Beard
+Eyebrows_Regular.fbx MR Eyebrows_Regular
+===== END =====

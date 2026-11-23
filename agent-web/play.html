@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>야간 교대 시뮬레이션 — 손끝 원장</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="play.css">
+</head>
+<body>
+
+<header class="p-top">
+  <a class="p-back" href="./#demo" aria-label="소개 페이지로 돌아가기">←</a>
+  <div class="p-title">
+    <h1>야간 교대 시뮬레이션</h1>
+    <p>사출 1라인 · 도어 트림 · 조장 부재</p>
+  </div>
+  <button type="button" class="p-ledger-btn" id="btn-ledger">보상 원장</button>
+</header>
+
+<main class="p-main">
+  <!-- 공장: 에이전트와 나눈 대화에 따라 여기서 생산이 돌아간다 -->
+  <section class="p-factory" aria-label="가상 공장">
+    <p class="pf-env" id="pf-env">오늘 밤 상황을 정하면 생산을 시작할 수 있습니다</p>
+    <div class="pf-machine" id="machine" aria-hidden="true">
+      <span class="mm-platen fixed"></span>
+      <span class="mm-platen moving"></span>
+      <span class="mm-barrel"></span>
+      <span class="mm-hopper"></span>
+      <span class="mm-worker"></span>
+    </div>
+    <div class="pf-grid" id="grid" role="img" aria-label="생산된 부품 100개. 붉은 칸은 불량"></div>
+    <p class="pf-status" id="status" aria-live="polite">대기 중</p>
+    <div class="pf-rates" id="rates"></div>
+    <a class="pf-3d" href="training/">PC라면 3D 공장으로 보기 →</a>
+  </section>
+
+  <!-- 에이전트: 상황 안내, 조각 제시, 결과 보고, 노하우 인터뷰를 한 대화에서 한다 -->
+  <section class="p-chat" aria-label="현장 에이전트">
+    <div class="p-messages" id="messages" aria-live="polite"></div>
+    <div class="p-choices" id="choices"></div>
+    <form class="p-composer" id="form">
+      <input id="input" type="text" autocomplete="off" placeholder="예: 영하 3도, 습도 80%" aria-label="에이전트에게 말하기">
+      <button type="submit">보내기</button>
+    </form>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script src="sim.js"></script>
+<script src="play.js"></script>
+</body>
+</html>
