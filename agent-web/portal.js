@@ -340,7 +340,7 @@
       if (!r) return;
       r.uses = (r.uses || 0) + 1; setRules(list);
       log("김민준 씨가 " + r.id + " (" + r.defectType + ") 순서대로 점검 → " + r.author + " 활용 " + r.uses + "회");
-      agentChat.push({ k: "note", text: r.id + " 활용을 기록했어요. " + r.author + "님의 활용 횟수가 " + r.uses + "회가 됐어요." + (EMBED ? " 태블릿을 내려놓고 100쇼트를 생산해 보세요." : "") });
+      agentChat.push({ k: "note", text: r.id + " 활용을 기록했어요. " + r.author + "님의 활용 횟수가 " + r.uses + "회가 됐어요." + (EMBED ? " 이제 왼쪽에서 100쇼트를 생산해 보세요." : "") });
       draw();
     });
     draw();
