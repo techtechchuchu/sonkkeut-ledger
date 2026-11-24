@@ -46,7 +46,7 @@ public class Machine
     public Transform movingPlaten;                 // 훈련 대상 사출기의 가동 플래튼 (localPosition.x로 움직인다)
     public const float ClosedX = -1.405f;
     public const float OpenX = -2.0f;
-    public Renderer[] lamps;                       // 조각 5개의 상태등
+    public Renderer[] lamps;                       // 노하우 5개의 상태등
     public Transform partsRoot;
     public WorkerRig self;                         // 주인공(김민준) 작업자. 1인칭 시점의 눈 위치
     public Camera cam;                             // 장면 카메라 (아주 작게 흔들어 실제 촬영처럼 보이게 한다)

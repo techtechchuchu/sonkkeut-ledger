@@ -4,8 +4,13 @@
    게시된 노하우는 3D 훈련(같은 주소의 /training)이 읽는 저장소(tacit-agent-v2)에 들어간다. */
 (function () {
   "use strict";
+  // 3D 태블릿 안에 띄운 화면(?embed=1)에서는 3D 메뉴와 소개 링크를 숨긴다 (portal.css 의 .embed)
+  if (/[?&]embed=1/.test(location.search)) {
+    document.documentElement.classList.add("embed");
+    try { if (!sessionStorage.getItem("tacit-embed-opened")) { sessionStorage.setItem("tacit-embed-opened", "1"); history.replaceState(null, "", location.pathname + location.search + "#/agent"); } } catch (e) { /* 무시 */ }
+  }
   const D = window.APP_DATA, SIM = window.SIM;
-  const LS_RULES = "tacit-agent-v2", LS_QUEUE = "tacit-portal-queue", LS_LOG = "tacit-portal-log", LS_ROLE = "tacit-portal-role";
+  const LS_RULES = "tacit-agent-v2", LS_QUEUE = "tacit-portal-queue", LS_LOG = "tacit-portal-log", LS_ROLE = "tacit-portal-role", LS_SESSION = "tacit-portal-session";
   const PROCS = ["injection", "welding", "mold"];
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -23,6 +28,21 @@
   const setRules = (l) => jset(LS_RULES, l);
   const getQueue = () => jget(LS_QUEUE, []);
   const setQueue = (q) => jset(LS_QUEUE, q);
+
+  /* ---------- 언어 (i18n.js). 한국어가 기본이고, 다른 언어는 번역이 있는 문구만 바뀐다 ---------- */
+  const I = window.I18N || { langs: [{ code: "ko", label: "한국어" }], dict: {}, rules: {} };
+  const LS_LANG = "tacit-portal-lang";
+  let lang = jget(LS_LANG, "ko");
+  try { const ql = new URLSearchParams(location.search).get("lang"); if (ql && (ql === "ko" || I.dict[ql])) { lang = ql; jset(LS_LANG, lang); } } catch (e) { /* 무시 */ }
+  if (lang !== "ko" && !I.dict[lang]) lang = "ko";
+  const fmt = (s, v) => String(s).replace(/\{(\w+)\}/g, (m, k) => (v && v[k] != null ? v[k] : m));
+  const nko = () => (lang !== "ko" && I.dict[lang]) || null;
+  // t(키, 한국어 문구, 값): 한국어면 그대로, 다른 언어면 번역 (번역이 없으면 한국어)
+  const t = (key, ko, v) => { const d = nko(); const s = d && d.ui && d.ui[key]; return fmt(s != null ? s : ko, v); };
+  const procName = (p) => { const d = nko(); return (d && d.proc && d.proc[p]) || D.processes[p].name; };
+  const factorLabel = (k) => { const d = nko(); return (d && d.factor && d.factor[k]) || D.factors[k].label; };
+  // 노하우 본문(증상·확인 순서·원인): 번역이 있으면 번역, 새로 등록한 노하우처럼 번역이 없으면 한국어 그대로
+  const rt = (r, f) => { const d = nko(); const x = d && I.rules[lang] && I.rules[lang][r.id]; const k = { defectType: "d", action: "a", cause: "c" }[f]; return (x && x[k]) || r[f]; };
   function log(text) {
     const l = jget(LS_LOG, []);
     l.unshift({ t: Date.now(), text });
@@ -33,9 +53,10 @@
     getRules().concat(getQueue()).forEach((r) => { const n = parseInt(String(r.id).replace(/\D/g, ""), 10); if (n > max) max = n; });
     return "TF-" + String(max + 1).padStart(3, "0");
   }
-  const expertLabel = (id) => D.experts[id] || "신규 등록 숙련자";
+  const expertLabel = (id) => { const d = nko(); return (d && d.experts && d.experts[id]) || D.experts[id] || t("newExpert", "신규 등록 숙련자"); };
   function condText(r) {
     const f = D.factors[r.factor];
+    const dc = nko(); if (dc && dc.cond && dc.cond[r.factor]) return fmt(dc.cond[r.factor], { n: r.threshold });
     return f.varLabel + " " + r.threshold + f.unit + (f.op === ">=" ? " 이상" : " 이하");
   }
   function hhmm(t) { const d = new Date(t); return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
@@ -52,12 +73,13 @@
 
   /* ---------- 역할 · 메뉴 ---------- */
   const ROLES = {
-    admin: { name: "관리자", av: "관", user: "품질경영팀", sub: "관리자", menus: ["dash", "lib", "review", "ledger", "train"] },
-    expert: { name: "숙련자", av: "박", user: "박 조장", sub: "숙련자 · 사출 27년차", menus: ["lib", "new", "ledger", "train"] },
-    worker: { name: "현장 근로자", av: "김", user: "김민준", sub: "현장 근로자 · 입사 4주차", menus: ["lib", "train"] }
+    admin: { name: "관리자", av: "관", user: "품질경영팀", sub: "관리자", menus: ["dash", "agent", "lib", "review", "ledger", "train"] },
+    expert: { name: "숙련자", av: "박", user: "박 조장", sub: "숙련자 · 사출 27년차", menus: ["agent", "lib", "new", "ledger", "train"] },
+    worker: { name: "현장 근로자", av: "김", user: "김민준", sub: "현장 근로자 · 입사 4주차", menus: ["agent", "lib", "train"] }
   };
   // 메뉴 아이콘 (24px 선 그림)
   const ICON = {
+    agent: '<path d="M4.5 5.5A2 2 0 0 1 6.5 3.5h11a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H11l-4.5 4v-4h0a2 2 0 0 1-2-2z"/><path d="M8.5 8h7M8.5 11.5h4.5"/>',
     dash: '<rect x="3.5" y="3.5" width="7" height="9" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="5" rx="1.6"/><rect x="13.5" y="12.5" width="7" height="8" rx="1.6"/><rect x="3.5" y="16.5" width="7" height="4" rx="1.6"/>',
     lib: '<path d="M4 5.6A1.6 1.6 0 0 1 5.6 4H11v16H5.6A1.6 1.6 0 0 1 4 18.4z"/><path d="M20 5.6A1.6 1.6 0 0 0 18.4 4H13v16h5.4a1.6 1.6 0 0 0 1.6-1.6z"/>',
     new: '<rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><path d="M12 8v8M8 12h8"/>',
@@ -66,6 +88,7 @@
     train: '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/>'
   };
   const PAGES = {
+    agent: { title: "현장 에이전트", desc: "용어를 몰라도 본 그대로 적으면, 숙련자가 남긴 확인 순서를 찾아 드립니다.", render: pAgent },
     dash: { title: "대시보드", desc: "게시된 노하우와 활용 현황을 한눈에 봅니다.", render: pDash },
     lib: { title: "노하우 라이브러리", desc: "현장에서 쓰는 확인 순서를 증상과 공정으로 찾습니다.", render: pLib },
     new: { title: "노하우 등록", desc: "숙련자의 판단을 증상, 확인 순서, 원인 순서로 남깁니다.", render: pNew },
@@ -84,23 +107,44 @@
     return m && menus.indexOf(m[1]) >= 0 ? m[1] : menus[0];
   }
 
+  // 역할 이름·사용자 표기, 페이지 제목·설명 (번역이 있으면 번역)
+  const roleOf = (r) => { const d = nko(); return d && d.roles && d.roles[r] ? d.roles[r] : ROLES[r]; };
+  const pageText = (k) => { const d = nko(); const p = d && d.pages && d.pages[k]; return { title: (p && p.title) || PAGES[k].title, desc: (p && p.desc) || PAGES[k].desc }; };
+  // 고정 문구(data-i18n)와 역할 버튼, 언어 선택
+  function applyStatic() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach((el) => { if (el.dataset.ko == null) el.dataset.ko = el.textContent; el.textContent = t(el.dataset.i18n, el.dataset.ko); });
+    document.querySelectorAll("[data-i18n-ph]").forEach((el) => { if (el.dataset.ko == null) el.dataset.ko = el.getAttribute("placeholder") || ""; el.setAttribute("placeholder", t(el.dataset.i18nPh, el.dataset.ko)); });
+    document.querySelectorAll(".role button").forEach((b) => { b.textContent = roleOf(b.dataset.role).name; });
+    const sel = $("lang");
+    if (sel) {
+      if (!sel.options.length) {
+        sel.innerHTML = I.langs.filter((l) => l.code === "ko" || I.dict[l.code]).map((l) => "<option value='" + l.code + "'>" + l.label + "</option>").join("");
+        sel.addEventListener("change", () => { lang = sel.value; jset(LS_LANG, lang); render(); });
+      }
+      sel.value = lang;
+      sel.hidden = sel.options.length < 2;
+    }
+  }
+
   function renderShell() {
     const cur = route();
     const pending = getQueue().filter((q) => q.status === "review").length;
     $("menu").innerHTML = ROLES[role].menus.map((k) =>
-      "<a href='#/" + k + "'" + (k === cur ? " aria-current='page'" : "") + "><svg viewBox='0 0 24 24' aria-hidden='true'>" + ICON[k] + "</svg>" + PAGES[k].title +
+      "<a href='#/" + k + "'" + (k === cur ? " aria-current='page'" : "") + "><svg viewBox='0 0 24 24' aria-hidden='true'>" + ICON[k] + "</svg>" + pageText(k).title +
       (k === "review" && pending ? "<span class='count'>" + pending + "</span>" : "") + "</a>").join("");
     document.querySelectorAll(".role button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.role === role ? "true" : "false"));
-    $("who").innerHTML = "<span class='av'>" + ROLES[role].av + "</span><span class='wn'><b>" + esc(ROLES[role].user) + "</b><small>" + esc(ROLES[role].sub) + "</small></span>";
-    $("page-title").textContent = PAGES[cur].title;
-    document.title = PAGES[cur].title + " · 제조현장의 암묵지 기록·활용 플랫폼 업무 포털";
+    $("who").innerHTML = "<span class='av'>" + ROLES[role].av + "</span><span class='wn'><b>" + esc(roleOf(role).user) + "</b><small>" + esc(roleOf(role).sub) + "</small></span>";
+    $("page-title").textContent = pageText(cur).title;
+    applyStatic();
+    document.title = pageText(cur).title + " · 울산정밀 업무 포털";
     $("side").classList.remove("open");
   }
 
   function render() {
     renderShell();
     const cur = route();
-    $("view").innerHTML = "<div class='ph'><div><h1>" + PAGES[cur].title + "</h1><p>" + PAGES[cur].desc + "</p></div></div><div id='page-body'></div>";
+    $("view").innerHTML = "<div class='ph'><div><h1>" + pageText(cur).title + "</h1><p>" + pageText(cur).desc + "</p></div></div><div id='page-body'></div>";
     PAGES[cur].render($("page-body"));
     animateNumbers($("page-body"));
     window.scrollTo(0, 0);
@@ -130,6 +174,7 @@
 
   document.querySelectorAll(".role button").forEach((b) => b.addEventListener("click", () => {
     role = b.dataset.role; jset(LS_ROLE, role);
+    try { localStorage.setItem(LS_SESSION, role); } catch (e) { /* 무시 */ }
     if (ROLES[role].menus.indexOf(route()) < 0) location.hash = "#/" + ROLES[role].menus[0];
     render();
   }));
@@ -146,16 +191,16 @@
   function fragCard(r, opts) {
     opts = opts || {};
     return "<article class='card frag' style='--i:" + (opts.i || 0) + "'>" +
-      "<div class='frag-top'><b>" + esc(r.id) + "</b><span class='tag'>" + esc(D.processes[r.process].name) + "</span>" +
-      (r.active === false ? "<span class='tag r'>게시 중단</span>" : "") + (opts.status ? statusTag(opts.status) : "") + "</div>" +
-      "<h3>" + esc(r.defectType) + "</h3>" +
-      "<div class='cond'>발생 상황: " + esc(condText(r)) + "</div>" +
-      "<div class='act'>" + esc(r.action) + "</div>" +
-      (r.cause ? "<div class='cause'>원인: " + esc(r.cause) + "</div>" : "") +
+      "<div class='frag-top'><b>" + esc(r.id) + "</b><span class='tag'>" + esc(procName(r.process)) + "</span>" +
+      (r.active === false ? "<span class='tag r'>" + t("stopped", "게시 중단") + "</span>" : "") + (opts.status ? statusTag(opts.status) : "") + "</div>" +
+      "<h3>" + esc(rt(r, "defectType")) + "</h3>" +
+      "<div class='cond'>" + t("cond", "발생 상황:") + " " + esc(condText(r)) + "</div>" +
+      "<div class='act'>" + esc(rt(r, "action")) + "</div>" +
+      (r.cause ? "<div class='cause'>" + t("causeLbl", "원인:") + " " + esc(rt(r, "cause")) + "</div>" : "") +
       (opts.extra || "") +
       "<div class='foot'><span>" + esc(r.author) + " · " + esc(expertLabel(r.author)) + "</span><span class='sp'></span>" +
-      (opts.noUses ? "" : "<span class='tag o'>활용 " + (r.uses || 0) + "회</span>") +
-      (opts.noDetail ? "" : "<button type='button' class='btn sm' data-detail='" + esc(r.id) + "'>상세</button>") +
+      (opts.noUses ? "" : "<span class='tag o'>" + t("uses", "활용 {n}회", { n: r.uses || 0 }) + "</span>") +
+      (opts.noDetail ? "" : "<button type='button' class='btn sm' data-detail='" + esc(r.id) + "'>" + t("detailBtn", "상세") + "</button>") +
       "</div></article>";
   }
 
@@ -197,27 +242,107 @@
 
   /* ---------- 2. 노하우 라이브러리 ---------- */
   const libState = { q: "", proc: "", factor: "", sort: "uses" };
+  const AGENT_SAMPLES = ["하얀 물결 같은 게 생겨요", "제품이 휘어졌어요", "표면이 움푹 꺼졌어요"];
   function pLib(el) {
     el.innerHTML =
+      (lang !== "ko" && nko() && nko().notice ? "<p class='lang-note'>" + esc(nko().notice) + "</p>" : "") +
       "<div class='toolbar'>" +
-      "<input type='search' id='lib-q' placeholder='증상·확인 순서·작성자로 검색' value='" + esc(libState.q) + "'>" +
-      "<select id='lib-proc' aria-label='공정'><option value=''>모든 공정</option>" + PROCS.map((p) => "<option value='" + p + "'" + (libState.proc === p ? " selected" : "") + ">" + esc(D.processes[p].name) + "</option>").join("") + "</select>" +
-      "<select id='lib-factor' aria-label='발생 상황'><option value=''>모든 발생 상황</option>" + Object.keys(D.factors).map((k) => "<option value='" + k + "'" + (libState.factor === k ? " selected" : "") + ">" + esc(D.factors[k].label) + "</option>").join("") + "</select>" +
-      "<select id='lib-sort' aria-label='정렬'><option value='uses'" + (libState.sort === "uses" ? " selected" : "") + ">활용 많은 순</option><option value='new'" + (libState.sort === "new" ? " selected" : "") + ">최근 등록순</option></select>" +
+      "<input type='search' id='lib-q' placeholder='" + esc(t("libSearch", "증상·확인 순서·작성자로 검색")) + "' value='" + esc(libState.q) + "'>" +
+      "<select id='lib-proc' aria-label='공정'><option value=''>" + t("allProc", "모든 공정") + "</option>" + PROCS.map((p) => "<option value='" + p + "'" + (libState.proc === p ? " selected" : "") + ">" + esc(procName(p)) + "</option>").join("") + "</select>" +
+      "<select id='lib-factor' aria-label='발생 상황'><option value=''>" + t("allCond", "모든 발생 상황") + "</option>" + Object.keys(D.factors).map((k) => "<option value='" + k + "'" + (libState.factor === k ? " selected" : "") + ">" + esc(factorLabel(k)) + "</option>").join("") + "</select>" +
+      "<select id='lib-sort' aria-label='정렬'><option value='uses'" + (libState.sort === "uses" ? " selected" : "") + ">" + t("sortUses", "활용 많은 순") + "</option><option value='new'" + (libState.sort === "new" ? " selected" : "") + ">" + t("sortNew", "최근 등록순") + "</option></select>" +
       "</div><div class='grid cards' id='lib-list'></div>";
     const draw = () => {
       let list = getRules().filter((r) => role === "admin" || r.active !== false);
       const q = libState.q.trim().toLowerCase();
-      if (q) list = list.filter((r) => [r.id, r.defectType, r.action, r.cause, r.author, expertLabel(r.author)].join(" ").toLowerCase().indexOf(q) >= 0);
+      if (q) list = list.filter((r) => [r.id, r.defectType, r.action, r.cause, rt(r, "defectType"), rt(r, "action"), rt(r, "cause"), r.author, expertLabel(r.author)].join(" ").toLowerCase().indexOf(q) >= 0);
       if (libState.proc) list = list.filter((r) => r.process === libState.proc);
       if (libState.factor) list = list.filter((r) => r.factor === libState.factor);
       list.sort(libState.sort === "uses" ? (a, b) => b.uses - a.uses : (a, b) => (b.id > a.id ? 1 : -1));
-      $("lib-list").innerHTML = list.length ? list.map((r, i) => fragCard(r, { i })).join("") : "<div class='card empty' style='grid-column:1/-1'>조건에 맞는 노하우가 없어요.</div>";
+      $("lib-list").innerHTML = list.length ? list.map((r, i) => fragCard(r, { i })).join("") : "<div class='card empty' style='grid-column:1/-1'>" + t("empty", "조건에 맞는 노하우가 없어요.") + "</div>";
     };
     $("lib-q").addEventListener("input", (e) => { libState.q = e.target.value; draw(); });
     $("lib-proc").addEventListener("change", (e) => { libState.proc = e.target.value; draw(); });
     $("lib-factor").addEventListener("change", (e) => { libState.factor = e.target.value; draw(); });
     $("lib-sort").addEventListener("change", (e) => { libState.sort = e.target.value; draw(); });
+    draw();
+  }
+
+  /* ---------- 현장 에이전트: 3D 태블릿에서 보던 대화 화면을 플랫폼 안에 그대로 둔다 ----------
+     본 그대로 적으면 증상 사전으로 알아듣고, 숙련자가 남긴 노하우 카드를 대화 안에 보여 준다.
+     카드의 '이 순서대로 점검했어요'가 활용 기록이고, 3D 공장은 이 기록을 읽어 그 노하우를 적용한 것으로 생산한다.
+     (데모는 표현 사전으로 찾고, 실제 서비스에서는 언어 모델이 찾는다) */
+  const agentChat = [];
+  const EMBED = document.documentElement.classList.contains("embed");
+  function agentHello() {
+    if (role === "expert") return "조장님, 현장 에이전트예요. 남기실 노하우가 있으면 아래 '노하우 남기기'를 눌러 주세요. 증상을 적으면 이미 남긴 노하우도 찾아 드려요.";
+    if (role === "admin") return "현장 에이전트예요. 현장 근로자가 보는 화면 그대로예요. 증상을 본 그대로 적으면 게시된 노하우를 찾아 드려요.";
+    return "김민준 님, 현장 에이전트예요. 용어를 몰라도 본 그대로 적어 주세요. 조장님들이 남긴 확인 순서를 찾아 드려요.";
+  }
+  function agentCard(r) {
+    return "<article class='ap-card'><div class='ap-top'><b>" + esc(r.id) + "</b><span class='tag'>" + esc(procName(r.process)) + "</span><span class='sp'></span><span class='tag o'>" + t("uses", "활용 {n}회", { n: r.uses || 0 }) + "</span></div>" +
+      "<h3>" + esc(rt(r, "defectType")) + "</h3>" +
+      "<div class='cond'>" + t("cond", "발생 상황:") + " " + esc(condText(r)) + "</div>" +
+      "<div class='act'>" + esc(rt(r, "action")) + "</div>" +
+      (r.cause ? "<div class='cause'>" + t("causeLbl", "원인:") + " " + esc(rt(r, "cause")) + "</div>" : "") +
+      "<div class='ap-foot'><span>" + esc(r.author) + " · " + esc(expertLabel(r.author)) + "</span><span class='sp'></span>" +
+      "<button type='button' class='btn sm' data-detail='" + esc(r.id) + "'>" + t("detailBtn", "상세") + "</button>" +
+      (role === "worker" ? "<button type='button' class='btn sm good' data-agent-follow='" + esc(r.id) + "'>이 순서대로 점검했어요</button>" : "") +
+      "</div></article>";
+  }
+  function pAgent(el) {
+    if (!agentChat.length) agentChat.push({ k: "ag", text: agentHello() });
+    const has = (k) => ROLES[role].menus.indexOf(k) >= 0;
+    el.innerHTML = "<section class='agentpad'>" +
+      "<div class='ap-msgs' id='ap-msgs' aria-live='polite'></div>" +
+      "<div class='ap-chips' id='ap-chips'>" +
+      AGENT_SAMPLES.map((x) => "<button type='button' class='chip' data-say='" + esc(x) + "'>" + esc(x) + "</button>").join("") +
+      (has("new") ? "<a class='chip nav' href='#/new'>노하우 남기기</a>" : "") +
+      (has("ledger") ? "<a class='chip nav' href='#/ledger'>보상 원장</a>" : "") +
+      "<a class='chip nav' href='#/lib'>라이브러리 전체</a>" +
+      "<button type='button' class='chip nav' data-agent-reset>처음부터</button></div>" +
+      "<form class='ap-form' id='ap-form'><input id='ap-in' type='text' autocomplete='off' maxlength='120' placeholder='예: 하얀 물결 같은 게 생겨요' aria-label='현장 에이전트에게 말하기'><button type='submit' class='btn primary'>보내기</button></form>" +
+      "</section>";
+    const box = $("ap-msgs");
+    const draw = () => {
+      const rules = getRules();
+      box.innerHTML = agentChat.map((m) => {
+        if (m.k === "me") return "<div class='ap-msg me'>" + esc(m.text) + "</div>";
+        if (m.k === "note") return "<div class='ap-msg note'>" + esc(m.text) + "</div>";
+        if (m.k === "cards") return "<div class='ap-cards'>" + m.ids.map((id) => rules.find((r) => r.id === id)).filter(Boolean).map(agentCard).join("") + "</div>";
+        return "<div class='ap-msg ag'>" + esc(m.text) + (m.small ? "<small>" + esc(m.small) + "</small>" : "") + "</div>";
+      }).join("");
+      box.scrollTop = box.scrollHeight;
+    };
+    const ask = (text) => {
+      text = String(text || "").trim(); if (!text) return;
+      agentChat.push({ k: "me", text });
+      let hit = null; D.symptoms.forEach((x) => { if (!hit && new RegExp(x.words).test(text)) hit = x; });
+      const live = getRules().filter((r) => r.active !== false);
+      const list = hit ? live.filter((r) => r.id === hit.rule || r.defectType === hit.name) : [];
+      if (hit && list.length) {
+        agentChat.push({ k: "ag", text: "'" + text + "' → '" + hit.name + "' 증상으로 이해했어요. 조장님들이 남긴 확인 순서가 " + list.length + "건 있어요. 조건은 건드리지 말고 아래 순서대로 확인하세요.", small: "예시 동작이에요. 데모는 표현 사전으로 찾고, 실제 서비스에서는 언어 모델이 찾아요." });
+        agentChat.push({ k: "cards", ids: list.map((r) => r.id) });
+      } else {
+        agentChat.push({ k: "ag", text: "아직 찾지 못했어요. 본 그대로 조금만 더 적어 주세요. 예: 하얀 물결 같은 게 생겨요 / 제품이 휘어졌어요 / 표면이 움푹 꺼졌어요" });
+      }
+      draw();
+    };
+    $("ap-form").addEventListener("submit", (e) => { e.preventDefault(); const v = $("ap-in").value; $("ap-in").value = ""; ask(v); });
+    $("ap-chips").addEventListener("click", (e) => {
+      const c = e.target.closest("[data-say]"); if (c) { ask(c.dataset.say); return; }
+      if (e.target.closest("[data-agent-reset]")) { agentChat.length = 0; agentChat.push({ k: "ag", text: agentHello() }); draw(); }
+    });
+    box.addEventListener("click", (e) => {
+      const fw = e.target.closest("[data-agent-follow]"); if (!fw) return;
+      // 활용 1회: 확인 순서대로 점검했다고 기록하면 원작성자의 활용 횟수가 오른다 (원장과 3D 공장에 그대로 반영)
+      const list = getRules(), r = list.find((x) => x.id === fw.dataset.agentFollow);
+      if (!r) return;
+      r.uses = (r.uses || 0) + 1; setRules(list);
+      log("김민준 씨가 " + r.id + " (" + r.defectType + ") 순서대로 점검 → " + r.author + " 활용 " + r.uses + "회");
+      agentChat.push({ k: "note", text: r.id + " 활용을 기록했어요. " + r.author + "님의 활용 횟수가 " + r.uses + "회가 됐어요." + (EMBED ? " 태블릿을 내려놓고 100쇼트를 생산해 보세요." : "") });
+      draw();
+    });
     draw();
   }
 
@@ -230,18 +355,19 @@
     const r = getRules().find((x) => x.id === id) || getQueue().find((x) => x.id === id);
     if (!r) return;
     const dlg = $("detail");
-    dlg.innerHTML = "<div class='inner'><div class='frag-top'><b>" + esc(r.id) + "</b><span class='tag'>" + esc(D.processes[r.process].name) + "</span>" +
-      (r.status ? statusTag(r.status) : (r.active === false ? "<span class='tag r'>게시 중단</span>" : "<span class='tag g'>게시 중</span>")) + "</div>" +
-      "<h2 style='margin:0'>" + esc(r.defectType) + "</h2>" +
-      "<dl><dt>발생 상황</dt><dd>" + esc(condText(r)) + "</dd><dt>확인 순서</dt><dd>" + esc(r.action) + "</dd><dt>원인</dt><dd>" + esc(r.cause || "기록 없음") + "</dd>" +
-      "<dt>원작성자</dt><dd>" + esc(r.author) + " · " + esc(expertLabel(r.author)) + "</dd><dt>활용 횟수</dt><dd>" + (r.uses || 0) + "회</dd>" +
-      "<dt>예상 효과</dt><dd>불량 완화 " + r.mDefect + "p · 다운타임 완화 " + r.mDown + "p (현장 데이터가 쌓이면 보정되는 추정값)</dd>" +
+    dlg.innerHTML = "<div class='inner'><div class='frag-top'><b>" + esc(r.id) + "</b><span class='tag'>" + esc(procName(r.process)) + "</span>" +
+      (r.status ? statusTag(r.status) : (r.active === false ? "<span class='tag r'>" + t("stopped", "게시 중단") + "</span>" : "<span class='tag g'>" + t("live", "게시 중") + "</span>")) + "</div>" +
+      "<h2 style='margin:0'>" + esc(rt(r, "defectType")) + "</h2>" +
+      "<dl><dt>" + t("dCond", "발생 상황") + "</dt><dd>" + esc(condText(r)) + "</dd><dt>" + t("dAction", "확인 순서") + "</dt><dd>" + esc(rt(r, "action")) + "</dd><dt>" + t("dCause", "원인") + "</dt><dd>" + esc(r.cause ? rt(r, "cause") : t("dNone", "기록 없음")) + "</dd>" +
+      "<dt>" + t("dAuthor", "원작성자") + "</dt><dd>" + esc(r.author) + " · " + esc(expertLabel(r.author)) + "</dd><dt>" + t("dUses", "활용 횟수") + "</dt><dd>" + t("dUsesVal", "{n}회", { n: r.uses || 0 }) + "</dd>" +
+      "<dt>" + t("dEffect", "예상 효과") + "</dt><dd>" + t("dEffectVal", "불량 완화 {a}p · 다운타임 완화 {b}p (현장 데이터가 쌓이면 보정되는 추정값)", { a: r.mDefect, b: r.mDown }) + "</dd>" +
+      (lang !== "ko" && rt(r, "action") !== r.action ? "<dt>" + t("dKo", "한국어 원문") + "</dt><dd class='ko-src'>" + esc(r.defectType) + " — " + esc(r.action) + "</dd>" : "") +
       (r.reason ? "<dt>반려 사유</dt><dd>" + esc(r.reason) + "</dd>" : "") + "</dl>" +
       "<div class='actions' style='display:flex;gap:8px;flex-wrap:wrap'>" +
-      (role === "worker" && !r.status && r.active !== false ? "<button type='button' class='btn good' data-followed='" + esc(r.id) + "'>이 순서대로 점검했어요 (활용 기록)</button>" : "") +
-      "<button type='button' class='btn primary' data-copy='" + esc(r.id) + "'>링크 복사</button>" +
+      (role === "worker" && !r.status && r.active !== false ? "<button type='button' class='btn good' data-followed='" + esc(r.id) + "'>" + t("followBtn", "이 순서대로 점검했어요 (활용 기록)") + "</button>" : "") +
+      "<button type='button' class='btn primary' data-copy='" + esc(r.id) + "'>" + t("copyBtn", "링크 복사") + "</button>" +
       (role === "admin" && !r.status ? "<button type='button' class='btn' data-toggle='" + esc(r.id) + "'>" + (r.active === false ? "다시 게시" : "게시 중단") + "</button>" : "") +
-      "<button type='button' class='btn' data-close>닫기</button></div></div>";
+      "<button type='button' class='btn' data-close>" + t("closeBtn", "닫기") + "</button></div></div>";
     if (!dlg.open) dlg.showModal();
   }
   $("detail").addEventListener("click", (e) => {
@@ -252,11 +378,11 @@
     if (fw) {
       // 활용 1회: 신입이 확인 순서대로 점검했다고 기록하면 원작성자의 활용 횟수가 오른다 (원장에 그대로 반영)
       const list = getRules(), r = list.find((x) => x.id === fw.dataset.followed);
-      if (r) { r.uses = (r.uses || 0) + 1; setRules(list); log("김민준 씨가 " + r.id + " (" + r.defectType + ") 순서대로 점검 → " + r.author + " 활용 " + r.uses + "회"); toast(r.id + " 활용을 기록했어요. " + r.author + "님의 활용 횟수가 " + r.uses + "회가 됐어요."); openDetail(r.id); }
+      if (r) { r.uses = (r.uses || 0) + 1; setRules(list); log("김민준 씨가 " + r.id + " (" + r.defectType + ") 순서대로 점검 → " + r.author + " 활용 " + r.uses + "회"); toast(lang !== "ko" ? t("followToast", "", { id: r.id, au: r.author, n: r.uses }) : r.id + " 활용을 기록했어요. " + r.author + "님의 활용 횟수가 " + r.uses + "회가 됐어요."); openDetail(r.id); }
     }
-    const t = e.target.closest("[data-toggle]");
-    if (t) {
-      const list = getRules(), r = list.find((x) => x.id === t.dataset.toggle);
+    const tg = e.target.closest("[data-toggle]");
+    if (tg) {
+      const list = getRules(), r = list.find((x) => x.id === tg.dataset.toggle);
       if (r) { r.active = r.active === false; setRules(list); log(r.id + (r.active ? " 다시 게시" : " 게시 중단")); $("detail").close(); render(); }
     }
   });
@@ -455,12 +581,15 @@
   function pTrain(el) {
     const n = getRules().filter((r) => r.active !== false).length;
     el.innerHTML =
-      "<p class='hint'>3D 공장에서 김민준 씨의 야간 교대를 체험해요. 게시된 노하우 <b>" + n + "건</b>이 3D에서 쓰이고, 3D에서 따를 때마다 활용 횟수가 올라가 원장에 반영돼요. 화면이 크게 필요하면 전체 화면을 눌러 주세요.</p>" +
-      "<div class='stage' id='stage'><button type='button' class='go' id='stage-go'>▶ 3D 공장 시작</button></div>";
+      "<p class='hint'>" + t("trainHint", "게시된 노하우 <b>{n}건</b>이 3D 공장에서 쓰이고, 3D에서 따를 때마다 활용 횟수가 올라가 원장에 반영돼요. 화면이 크게 필요하면 전체 화면을 눌러 주세요.", { n: n }) + "</p>" +
+      "<div class='stage' id='stage'><button type='button' class='go' id='stage-go'>" + t("trainStart", "▶ 3D 공장 시작") + "</button></div>";
     $("stage-go").addEventListener("click", () => {
       if (window.innerWidth < 760) { location.href = "mobile.html"; return; }
       const st = $("stage");
-      st.innerHTML = "<iframe src='training/' title='3D 사출 공장 훈련' allow='fullscreen; autoplay' allowfullscreen></iframe><button type='button' class='full' id='stage-full'>전체 화면</button>";
+      st.innerHTML = "<iframe src='training/' title='3D 사출 공장 훈련' allow='fullscreen; autoplay' allowfullscreen></iframe>";
+      // 전체 화면 버튼은 3D 화면 위가 아니라 아래에 둔다 (3D 안의 버튼과 겹치지 않게)
+      const fb = document.createElement("button"); fb.type = "button"; fb.id = "stage-full"; fb.className = "btn sm stage-full-out"; fb.textContent = t("full", "전체 화면");
+      st.insertAdjacentElement("afterend", fb);
       const f = st.querySelector("iframe");
       $("stage-full").addEventListener("click", () => (st.requestFullscreen || st.webkitRequestFullscreen || function () {}).call(st));
       const re = () => [0, 250, 800, 1800].forEach((ms) => setTimeout(() => { try { f.contentWindow.dispatchEvent(new Event("resize")); } catch (e) { /* 무시 */ } }, ms));
@@ -468,16 +597,54 @@
     });
   }
 
-  /* ---------- 시작 ---------- */
-  getRules(); // 3D 훈련이 읽을 저장소를 먼저 채워 둔다
-  if (/share=/.test(location.hash)) {
-    const m = location.hash.match(/share=([A-Za-z0-9_\-]+)/);
-    const res = importShared(m[1]);
-    history.replaceState(null, "", location.pathname + location.search + "#/" + (ROLES[role].menus.indexOf("review") >= 0 ? "review" : ROLES[role].menus[0]));
-    render();
-    toast(res.msg, !res.ok);
-  } else {
-    if (!location.hash) history.replaceState(null, "", "#/" + ROLES[role].menus[0]);
-    render();
+  /* ---------- 시작: 기업 전용 공간이라 로그인부터 ---------- */
+  function start() {
+    getRules(); // 3D 훈련이 읽을 저장소를 먼저 채워 둔다
+    if (/share=/.test(location.hash)) {
+      const m = location.hash.match(/share=([A-Za-z0-9_\-]+)/);
+      const res = importShared(m[1]);
+      history.replaceState(null, "", location.pathname + location.search + "#/" + (ROLES[role].menus.indexOf("review") >= 0 ? "review" : ROLES[role].menus[0]));
+      render();
+      toast(res.msg, !res.ok);
+    } else {
+      if (!location.hash) history.replaceState(null, "", "#/" + ROLES[role].menus[0]);
+      render();
+    }
+  }
+  function loggedIn() { try { return !!localStorage.getItem(LS_SESSION); } catch (e) { return false; } }
+  function enter(r) {
+    role = ROLES[r] ? r : "admin";
+    jset(LS_ROLE, role);
+    try { localStorage.setItem(LS_SESSION, role); } catch (e) { /* 저장소를 못 쓰면 이번 화면에서만 유지 */ }
+    document.body.classList.remove("locked");
+    start();
+  }
+  document.querySelectorAll("[data-login]").forEach((b) => b.addEventListener("click", () => enter(b.dataset.login)));
+  // 3D 태블릿 안에서는 로그인 화면 없이 김민준(현장 근로자)으로 바로 들어간다. 역할은 위쪽 버튼으로 바꿀 수 있다
+  const embedAuto = document.documentElement.classList.contains("embed") && !loggedIn();
+  if (embedAuto) setTimeout(() => enter("worker"), 0);
+  $("logout").addEventListener("click", () => {
+    try { localStorage.removeItem(LS_SESSION); } catch (e) { /* 무시 */ }
+    history.replaceState(null, "", location.pathname + location.search);
+    $("side").classList.remove("open");
+    document.body.classList.add("locked");
+    window.scrollTo(0, 0);
+  });
+
+  // 앱 설치 안내: 안드로이드는 설치 버튼, iPhone·iPad는 홈 화면에 추가 안내
+  (function () {
+    const standalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone;
+    if (standalone) return;
+    const box = $("install-box"), btn = $("install"), hint = $("ios-hint");
+    let ev = null;
+    window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); ev = e; box.hidden = false; btn.hidden = false; });
+    btn.addEventListener("click", () => { if (!ev) return; ev.prompt(); ev.userChoice.finally(() => { ev = null; btn.hidden = true; }); });
+    window.addEventListener("appinstalled", () => { box.hidden = true; });
+    if (/iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) { box.hidden = false; hint.hidden = false; }
+  })();
+
+  if (loggedIn()) {
+    document.body.classList.remove("locked");
+    start();
   }
 })();

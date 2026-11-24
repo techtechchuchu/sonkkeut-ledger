@@ -62,7 +62,7 @@ public partial class TrainingGame
         if (sSubWrap == null) sSubWrap = new GUIStyle(sSub) { wordWrap = true, alignment = TextAnchor.MiddleLeft };
         float bh = Mathf.Max(52f, sSubWrap.CalcHeight(new GUIContent(line), textW) + 16f);
         float cx = 488 + Mathf.Max(380f, W - 1192f) / 2f;
-        var r = new Rect(cx - bw / 2f, 792f - bh, bw, bh); // 아랫변은 생산 패널 위에 고정
+        var r = new Rect(cx - bw / 2f, 772f - bh, bw, bh); // 아랫변은 안내 띠 위에 고정
 
         Color old = GUI.color;
         GUI.color = new Color(0f, 0f, 0f, 0.70f * a);

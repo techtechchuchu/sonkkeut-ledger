@@ -5,11 +5,11 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 // 3D 화면 오른쪽의 현장 에이전트 대화 — 김민준 씨의 하룻밤.
-// 에이전트가 오늘 밤 조건에 맞는 조각을 보여 주고, 민준 씨가 본 대로 적은 증상을 알아듣고,
-// 생산 결과를 알려 주고, 같은 대화에서 조장의 노하우를 새 조각으로 받는다.
+// 에이전트가 오늘 밤 조건에 맞는 노하우를 보여 주고, 민준 씨가 본 대로 적은 증상을 알아듣고,
+// 생산 결과를 알려 주고, 같은 대화에서 조장의 노하우를 새 노하우로 받는다.
 // 데모의 대화는 규칙과 표현 사전으로 동작한다. 실제 서비스에서 언어 모델이 맡는 자리는 두 곳이다.
 //   1) 정리: 숙련자의 30초 말을 증상 → 확인 순서 → 원인으로 정리 (IvSample이 결과를 예시로 보여 준다)
-//   2) 찾기: 신입의 말을 증상으로 알아듣고 조각을 찾음 (TacitData.MatchSymptom이 표현 사전으로 흉내 낸다)
+//   2) 찾기: 신입의 말을 증상으로 알아듣고 노하우를 찾음 (TacitData.MatchSymptom이 표현 사전으로 흉내 낸다)
 public partial class TrainingGame
 {
     enum MsgKind { Agent, Me, Note, Cards, Found, Draft }
@@ -37,8 +37,24 @@ public partial class TrainingGame
     {
         if (lastWebVisible != 0) { TacitInputLayout(0f, 0f, 0f, 0f, 0); lastWebVisible = 0; lastWebInput = new Rect(); }
     }
+    [DllImport("__Internal")] static extern void TacitPortalLayout(float left, float top, float width, float height, int visible);
+    Rect lastPortal; int lastPortalVisible = -1;
+    // 가상 좌표(1080 기준)의 자리에 포털 화면을 겹쳐 놓는다
+    void ShowWebPortal(Rect r, float scale)
+    {
+        var px = new Rect(r.x * scale / Screen.width, r.y * scale / Screen.height, r.width * scale / Screen.width, r.height * scale / Screen.height);
+        if (px != lastPortal || lastPortalVisible != 1) { TacitPortalLayout(px.x, px.y, px.width, px.height, 1); lastPortal = px; lastPortalVisible = 1; }
+    }
+    void HideWebPortal()
+    {
+        if (lastPortalVisible == 1) { TacitPortalLayout(0f, 0f, 0f, 0f, 0); lastPortalVisible = 0; lastPortal = new Rect(); }
+    }
+    const bool HasWebPortal = true;
 #else
     void HideWebInput() { }
+    void ShowWebPortal(Rect r, float scale) { }
+    void HideWebPortal() { }
+    const bool HasWebPortal = false;
 #endif
 
     // ---------- 메시지 ----------
@@ -84,7 +100,7 @@ public partial class TrainingGame
         ShowCards();
     }
 
-    // 오늘 밤 조건에서 생기기 쉬운 증상의 조각을 대화에 카드로 올린다. 카드는 조건이 바뀌면 함께 바뀐다
+    // 오늘 밤 조건에서 생기기 쉬운 증상의 노하우를 대화에 카드로 올린다. 카드는 조건이 바뀌면 함께 바뀐다
     void ShowCards()
     {
         ivStep = null;
@@ -93,10 +109,10 @@ public partial class TrainingGame
         int n = Hits().Count;
         if (n > 0)
         {
-            AgentSay("오늘 밤 조건에서 미리 볼 조각이 " + n + "건 있습니다. 따를 것을 고르세요.");
+            AgentSay("오늘 밤 조건에서 미리 볼 노하우가 " + n + "건 있습니다. 따를 것을 고르세요.");
             Say(MsgKind.Cards, "");
         }
-        else AgentSay("오늘 밤 조건에 해당하는 조각은 없습니다. 작업표준서대로 진행하면 됩니다.");
+        else AgentSay("오늘 밤 조건에 해당하는 노하우는 없습니다. 작업표준서대로 진행하면 됩니다.");
         ReadyChoices();
     }
 
@@ -127,7 +143,7 @@ public partial class TrainingGame
         ShowCards();
     }
 
-    // 증상으로 찾기: 민준 씨가 본 대로 적은 말을 증상 이름으로 잇고, 그 조각을 보여 준다
+    // 증상으로 찾기: 민준 씨가 본 대로 적은 말을 증상 이름으로 잇고, 그 노하우를 보여 준다
     void ShowSymptom(string text, int symptom)
     {
         string name = TacitData.SymptomName[symptom];
@@ -137,7 +153,7 @@ public partial class TrainingGame
             if (f.id == TacitData.SymptomRule[symptom] || f.defectType == name) found.Add(f);
         if (found.Count == 0)
         {
-            AgentSay("이 증상에 대해 남겨진 조각이 아직 없습니다. 작업표준서를 확인하고, 해결되면 조장님께 남겨 달라고 요청하세요.");
+            AgentSay("이 증상에 대해 남겨진 노하우가 아직 없습니다. 작업표준서를 확인하고, 해결되면 조장님께 남겨 달라고 요청하세요.");
             return;
         }
         AgentSay("조장님들이 남긴 확인 순서가 " + found.Count + "건 있습니다. 조건은 건드리지 말고 아래 순서대로 확인하세요.");
@@ -150,7 +166,7 @@ public partial class TrainingGame
         choices.Clear();
         int n = 0;
         foreach (Fragment f in Hits()) if (f.applied) n++;
-        AgentSay(n > 0 ? "조각 " + n + "건을 따르며 생산합니다. 공장을 보세요." : "작업표준서만 보고 생산합니다. 공장을 보세요.");
+        AgentSay(n > 0 ? "노하우 " + n + "건을 따르며 생산합니다. 공장을 보세요." : "작업표준서만 보고 생산합니다. 공장을 보세요.");
         Cue(n > 0 ? "run_with" : "run_without", true, 5f);
     }
 
@@ -158,11 +174,11 @@ public partial class TrainingGame
     {
         int saved = stdDefects - defects;
         string text = "생산이 끝났습니다. 불량 " + defects + " / " + Shots + "개입니다.\n작업표준서만 봤다면 " + stdDefects + "개";
-        text += saved > 0 ? "였을 겁니다. 조장님들의 조각으로 " + saved + "개를 막았습니다." : "였습니다.";
+        text += saved > 0 ? "였을 겁니다. 조장님들의 노하우로 " + saved + "개를 막았습니다." : "였습니다.";
         AgentSay(text);
         Cue(saved > 0 ? "end_saved" : (defects == 0 ? "end_clean" : "end_none"), true, 5f);
         if (credits.Count > 0) Say(MsgKind.Note, "활용 기록 +1: " + string.Join(", ", credits.ToArray()));
-        else AgentSay("따른 조각이 없어 활용 기록은 없습니다. 조각을 따르고 다시 생산해 비교해 보세요.");
+        else AgentSay("따른 노하우가 없어 활용 기록은 없습니다. 노하우를 따르고 다시 생산해 비교해 보세요.");
         SetChoices(
             new Choice { label = "다시 생산", main = true, run = () => StartCoroutine(Run()) },
             new Choice { label = "상황 바꾸기", run = AskSituation },
@@ -175,7 +191,7 @@ public partial class TrainingGame
         ivStep = null;
         showLedger = true;
         Cue("ledger");
-        AgentSay("보상 원장을 띄웠습니다. 민준 씨가 조각을 따를 때마다 남긴 사람의 활용 횟수가 올라가고, 그만큼 보상 지분이 커집니다.");
+        AgentSay("보상 원장을 띄웠습니다. 민준 씨가 노하우를 따를 때마다 남긴 사람의 활용 횟수가 올라가고, 그만큼 보상 지분이 커집니다.");
         ReadyChoices();
     }
 
@@ -248,7 +264,7 @@ public partial class TrainingGame
     static readonly float[] ThresholdDefault = { 70f, 10f, 30f, 15f, 24f };
     static readonly string[] ThresholdUnit = { "%", "℃", "℃", "년", "주" };
 
-    // 30초 말하기 예시: 실제 서비스에서는 이 말을 언어 모델이 조각 구조로 정리한다
+    // 30초 말하기 예시: 실제 서비스에서는 이 말을 언어 모델이 노하우 구조로 정리한다
     const string SampleSpeech = "장마철 밤에 제품에 하얀 줄 생기면 건조기부터 봐. 온도랑 시간 표준 채웠는지 보고, 원료 포대 언제 뜯었는지 확인해. 대개 원료가 습기 먹은 거야. 조건은 건드리지 말고.";
 
     void IvStart()
@@ -368,11 +384,11 @@ public partial class TrainingGame
         WebStore.AddRule(f);
         ivStep = null;
         Say(MsgKind.Note, f.id + " 등록 완료" + (WebStore.Linked ? " · 웹 원장에도 반영됨" : ""));
-        AgentSay(TacitData.PersonaName + " 씨가 같은 증상을 만나면 이 조각이 안내되고, 쓰일 때마다 " + f.author + "님의 활용 횟수가 올라갑니다.\n효과는 우선 추정값으로 넣었고, 실제 불량 데이터가 쌓이면 보정됩니다.");
+        AgentSay(TacitData.PersonaName + " 씨가 같은 증상을 만나면 이 노하우가 안내되고, 쓰일 때마다 " + f.author + "님의 활용 횟수가 올라갑니다.\n효과는 우선 추정값으로 넣었고, 실제 불량 데이터가 쌓이면 보정됩니다.");
         SetChoices(
             new Choice { label = "이 상황에서 바로 확인", main = true, run = () =>
             {
-                // 방금 조각이 해당되는 조건으로 현장을 맞춘다
+                // 방금 노하우가 해당되는 조건으로 현장을 맞춘다
                 switch (f.factor)
                 {
                     case Factor.Humidity: env.humidity = Mathf.Clamp(f.threshold, 20f, 95f); break;
@@ -446,7 +462,7 @@ public partial class TrainingGame
         r = new Rect(r.x + 16f, r.y + 22f, r.width - 32f, r.height - 22f);
         Panel(r);
 
-        // 조건 밖으로 나간 조각은 따르기도 풀린다
+        // 조건 밖으로 나간 노하우는 따르기도 풀린다
         foreach (Fragment f in frags) if (!TacitSim.Triggered(f, env)) f.applied = false;
         List<Fragment> hits = Hits();
 
@@ -456,7 +472,7 @@ public partial class TrainingGame
 
         // 에이전트 안의 4가지 기능: 찾기 · 노하우 남기기 · 보상 원장 · 자료
         {
-            string[] tabNames = { "조각 찾기", "노하우 남기기", "보상 원장", "자료" };
+            string[] tabNames = { "노하우 찾기", "노하우 남기기", "보상 원장", "자료" };
             int cur = showDoc ? 3 : (showLedger ? 2 : (ivStep != null ? 1 : 0));
             float tw = (w - 3 * 6f) / 4f;
             GUI.enabled = !running;
@@ -634,26 +650,26 @@ public partial class TrainingGame
     // 1인칭: 내가 태블릿을 두 손으로 들고 있다. 소매 입은 팔이 화면 아래에서 올라와 아래 모서리를 받치고, 장갑 낀 엄지·검지가 앞 테두리에 걸린다
     void DrawPersonBack(Rect t) { heldRect = t; }
 
-    void DrawHeldHands(Rect t)
+    void DrawHeldHands(Rect t, float k = 1f)
     {
         Color sleeve = ShirtC, cuff = VestC;
         Color glove = new Color(0.60f, 0.63f, 0.68f, 1f), gloveDark = new Color(0.44f, 0.47f, 0.52f, 1f), gloveLight = new Color(0.72f, 0.75f, 0.79f, 1f);
         for (int side = 0; side < 2; side++)
         {
             float sg = side == 0 ? -1f : 1f;                 // -1 왼손, +1 오른손
-            Vector2 p = new Vector2(side == 0 ? t.x + 2f : t.xMax - 2f, t.yMax - 22f); // 잡는 자리(아래 모서리 위쪽)
+            Vector2 p = new Vector2(side == 0 ? t.x + 2f : t.xMax - 2f, t.yMax - 22f * k); // 잡는 자리(아래 모서리 위쪽)
             Vector2 d = new Vector2(sg * 0.25f, 0.97f).normalized; // 팔이 화면 아래로 뻗는 방향
             float ang = Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg;
-            Capsule(p + d * 250f, 560f, 112f, ang, sleeve);                      // 팔(작업복 소매)
-            Capsule(p + d * 120f, 70f, 118f, ang, cuff);                         // 소매 끝 단
-            Capsule(p + d * 56f, 140f, 108f, ang, gloveDark);                    // 손바닥(테두리 뒤를 감쌈)
+            Capsule(p + d * 250f * k, 560f * k, 112f * k, ang, sleeve);                      // 팔(작업복 소매)
+            Capsule(p + d * 120f * k, 70f * k, 118f * k, ang, cuff);                         // 소매 끝 단
+            Capsule(p + d * 56f * k, 140f * k, 108f * k, ang, gloveDark);                    // 손바닥(테두리 뒤를 감쌈)
             // 앞쪽 테두리에 걸친 엄지와 검지
             Vector2 inward = new Vector2(-sg, 0f);
             float tang = Mathf.Atan2(-0.80f, -sg * 0.60f) * Mathf.Rad2Deg;      // 위·안쪽을 향함
-            Capsule(p + inward * 10f + new Vector2(0f, -4f), 96f, 42f, tang, glove);      // 엄지
-            Capsule(p + inward * 18f + new Vector2(0f, -10f), 34f, 32f, tang, gloveLight); // 엄지 끝
+            Capsule(p + (inward * 10f + new Vector2(0f, -4f)) * k, 96f * k, 42f * k, tang, glove);      // 엄지
+            Capsule(p + (inward * 18f + new Vector2(0f, -10f)) * k, 34f * k, 32f * k, tang, gloveLight); // 엄지 끝
             float iang = Mathf.Atan2(-0.95f, -sg * 0.30f) * Mathf.Rad2Deg;
-            Capsule(p + inward * 6f + new Vector2(0f, -48f), 70f, 32f, iang, glove);       // 검지
+            Capsule(p + (inward * 6f + new Vector2(0f, -48f)) * k, 70f * k, 32f * k, iang, glove);       // 검지
         }
     }
 

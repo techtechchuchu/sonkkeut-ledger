@@ -4,10 +4,11 @@ using System.Text.RegularExpressions;
 // 위험 요인. 배열 인덱스로도 쓴다.
 public enum Factor { Humidity = 0, Cold = 1, Hot = 2, Age = 3, Skill = 4 }
 
-// 암묵지 조각: 증상 → 확인 순서 → 원인. 주로 생기는 상황(요인·임계값)과 원작성자, 활용 횟수가 함께 기록된다
+// 암묵지 노하우: 증상 → 확인 순서 → 원인. 주로 생기는 상황(요인·임계값)과 원작성자, 활용 횟수가 함께 기록된다
 public class Fragment
 {
     public string id;
+    public bool portalCredited; // 플랫폼에서 '이 순서대로 점검했어요'로 이미 활용이 기록됨 (생산을 마칠 때 또 올리지 않는다)
     public Factor factor;   // 주로 생기는 상황
     public float threshold;
     public string defectType; // 증상
@@ -105,7 +106,7 @@ public static class TacitData
         };
     }
 
-    // 기본 조각의 원인 (웹 저장소의 예전 조각에는 원인이 없을 수 있다)
+    // 기본 노하우의 원인 (웹 저장소의 예전 노하우에는 원인이 없을 수 있다)
     public static string DefaultCause(string id)
     {
         foreach (Fragment f in CreateFragments()) if (f.id == id) return f.cause;

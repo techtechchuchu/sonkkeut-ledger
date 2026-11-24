@@ -477,14 +477,17 @@
     }).join("") +
     "<tr><td>본 서비스</td><td>문서에 없는 확인 순서를 숙련자의 말에서 새로 기록하고, 활용 횟수로 원작성자를 보상</td><td>문서가 없어도 시작할 수 있음</td></tr></tbody>";
 
-  var links = [];
-  D.stats.forEach(function (s) { links.push({ text: s.value + " " + s.label + " — " + s.source, url: s.url }); });
-  D.docSources.forEach(function (d) { links.push({ text: d.text, url: d.url }); });
-  D.references.forEach(function (r) { links.push({ text: r.name + ": " + r.desc, url: r.url }); });
-  D.concepts.forEach(function (c) { links.push({ text: c.name + ": " + c.desc, url: c.url }); });
-  $("sources").innerHTML = links.map(function (l) {
-    return "<li><a href='" + esc(l.url) + "' target='_blank' rel='noopener'>" + esc(l.text) + "</a></li>";
-  }).join("");
+  // 참고문헌: 종류별로 묶어 근거 창의 맨 아래에 보여 준다
+  function refGroup(title, rows) {
+    return "<h3>" + esc(title) + " <small>" + rows.length + "건</small></h3><ul>" + rows.map(function (l) {
+      return "<li><a href='" + esc(l.url) + "' target='_blank' rel='noopener'>" + esc(l.text) + "</a></li>";
+    }).join("") + "</ul>";
+  }
+  $("sources").innerHTML =
+    refGroup("통계 수치", D.stats.map(function (s) { return { text: s.value + " " + s.label + " — " + s.source, url: s.url }; })) +
+    refGroup("기사·공공자료", D.docSources.map(function (d) { return { text: d.text, url: d.url }; })) +
+    refGroup("유사 사례·기술", D.references.map(function (r) { return { text: r.name + ": " + r.desc, url: r.url }; })) +
+    refGroup("개념 근거", D.concepts.map(function (c) { return { text: c.name + ": " + c.desc, url: c.url }; }));
   $("contest").innerHTML = "<a href='" + esc(D.contest.url) + "' target='_blank' rel='noopener'>" + esc(D.contest.label) + "</a> 출품 준비작";
 
   /* =====================================================

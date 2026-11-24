@@ -51,5 +51,41 @@ mergeInto(LibraryManager.library, {
     form.style.width = (width * 100) + "vw";
     form.style.height = (height * 100) + "vh";
     form.style.display = visible ? "flex" : "none";
+  },
+
+  // 3) 태블릿 안의 플랫폼 화면: 업무 포털(portal.html)을 태블릿 화면 자리에 그대로 겹쳐 놓는다. left/top/width/height는 창 크기에 대한 비율(0~1)
+  TacitPortalLayout: function (left, top, width, height, visible) {
+    var f = document.getElementById("tacit-portal");
+    if (!f) {
+      if (!visible) return;
+      f = document.createElement("iframe");
+      f.id = "tacit-portal";
+      f.title = "업무 포털";
+      f.src = "../portal.html?embed=1&role=worker#/agent"; // 3D의 주인공(현장 근로자)의 현장 에이전트 화면으로 연다
+      f.style.cssText = "position:fixed;border:0;border-radius:10px;background:#fff;z-index:5;display:none";
+      document.body.appendChild(f);
+    }
+    var was = f.style.display !== "none";
+    // 포털은 정해진 폭으로 그리고, 태블릿 화면 크기에 맞춰 통째로 줄인다 (창이 작아도 배치가 깨지지 않게)
+    f._r = [left, top, width, height];
+    if (!f._fit) {
+      f._fit = function () {
+        var r = f._r, w = window.innerWidth * r[2], h = window.innerHeight * r[3];
+        var base = w > 640 ? Math.max(1080, Math.min(1360, Math.round(w))) : 430; // 넓으면 데스크톱 배치, 좁으면 휴대폰 배치
+        var k = w / base;
+        if (!(k > 0)) return;
+        f.style.left = (window.innerWidth * r[0]) + "px";
+        f.style.top = (window.innerHeight * r[1]) + "px";
+        f.style.width = base + "px";
+        f.style.height = (h / k) + "px";
+        f.style.transformOrigin = "0 0";
+        f.style.transform = "scale(" + k + ")";
+      };
+      window.addEventListener("resize", f._fit);
+    }
+    f._fit();
+    f.style.display = visible ? "block" : "none";
+    // 다시 열 때는 3D에서 바뀐 활용 횟수가 보이도록 새로 그린다
+    if (visible && !was) { try { if (f.contentWindow && f.contentWindow.location.href.indexOf("portal.html") >= 0) f.contentWindow.location.reload(); } catch (e) {} }
   }
 });

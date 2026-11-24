@@ -16,13 +16,7 @@
   var FRAMES = { dir: "frames/", count: 0, ext: "jpg" }; // 배경 프레임은 쓰지 않는다 (count 를 올리면 frames/ 의 이미지를 스크롤에 맞춰 넘긴다)
 
   // 장면마다 보여 줄 화면: 3D 공장과 업무 포털의 실제 화면 (누르면 그 화면으로 들어간다)
-  var VIS = [
-    '<a class="sc-shot field" href="#train"><img src="shots/field_view.jpg" alt="3D로 만든 사출 공장. 라인 위에서 작업이 이어진다" loading="lazy"><span class="sc-go">3D 공장에서 직접 보기 →</span></a>',
-    '<a class="sc-shot field" href="#train"><img src="shots/field_pov.jpg" alt="3D 공장 안, 김민준 씨 눈높이에서 본 야간 라인" loading="lazy"><span class="sc-go">3D 공장에서 직접 보기 →</span></a>',
-    '<a class="sc-shot portal" href="portal.html?role=worker#/lib"><img src="shots/portal_search.jpg" alt="업무 포털의 노하우 라이브러리. 은줄을 검색한 화면" loading="lazy"><span class="sc-go">포털에서 직접 찾아보기 →</span></a>',
-    '<a class="sc-shot portal" href="portal.html?role=worker#/lib"><img src="shots/portal_detail.jpg" alt="업무 포털의 노하우 상세. 발생 상황, 확인 순서, 원인, 원작성자와 활용 기록 버튼" loading="lazy"><span class="sc-go">포털에서 직접 해보기 →</span></a>',
-    '<a class="sc-shot portal" href="portal.html?role=admin#/ledger"><img src="shots/portal_ledger.jpg" alt="업무 포털의 공유·보상 원장. 숙련자별 활용 횟수와 배분액" loading="lazy"><span class="sc-go">포털에서 원장 보기 →</span></a>'
-  ];
+  
 
   var n = steps.length;
   var wrap = document.createElement("div");
@@ -44,7 +38,8 @@
     d.innerHTML = '<div class="sc-time">' + esc(s.t) + "</div><h3>" + esc(s.h) + "</h3><p>" + esc(s.p) + "</p>";
     text.appendChild(d);
     var v = document.createElement("div"); v.className = "sc-vis shot"; v.setAttribute("aria-hidden", "true");
-    v.innerHTML = VIS[i] || "";
+    var photo = items[i].querySelector(".story-shot");
+    if (photo) v.appendChild(photo);
     vis.appendChild(v);
   });
   pin.appendChild(canvas); pin.appendChild(shade); pin.appendChild(dots); pin.appendChild(text); pin.appendChild(vis);
@@ -101,6 +96,8 @@
       st[i].classList.toggle("on", i === idx);
       st[i].classList.toggle("past", i < idx);
       vs[i].classList.toggle("on", i === idx);
+      vs[i].inert = i !== idx;
+      vs[i].setAttribute("aria-hidden", String(i !== idx));
       ds[i].classList.toggle("on", i === idx);
       ds[i].setAttribute("aria-current", i === idx ? "true" : "false");
     }

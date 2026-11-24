@@ -17,7 +17,7 @@ public struct SimResult
 }
 
 // 웹 대시보드의 sim.js와 같은 식.
-// 불량률 = 기준 × (1 + Σ 가중치 × 요인 강도 × (1 − 적용된 조각의 완화율))
+// 불량률 = 기준 × (1 + Σ 가중치 × 요인 강도 × (1 − 적용된 노하우의 완화율))
 public static class TacitSim
 {
     public static float[] Factors(Env e)

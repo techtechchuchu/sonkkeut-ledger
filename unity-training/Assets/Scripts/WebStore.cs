@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 
 // 웹페이지(agent-web)와 같은 브라우저 저장소를 쓴다.
-// 웹에서 숙련자가 등록한 조각이 훈련 장면에 나타나고, 훈련에서 따른 기록이 웹 보상 원장에 반영된다.
+// 웹에서 숙련자가 등록한 노하우가 훈련 장면에 나타나고, 훈련에서 따른 기록이 웹 보상 원장에 반영된다.
 // 브라우저가 아닌 실행 환경(Windows 실행 파일, 에디터)에서는 아무것도 하지 않는다.
 public static class WebStore
 {
@@ -30,7 +30,7 @@ public static class WebStore
     static void TacitSetStore(string key, string value) { }
 #endif
 
-    static StoredList stored; // 웹 저장소의 전체 조각(다른 공정 포함). 없으면 null
+    static StoredList stored; // 웹 저장소의 전체 노하우(다른 공정 포함). 없으면 null
 
     static bool TryFactor(string name, out Factor f)
     {
@@ -46,7 +46,7 @@ public static class WebStore
         return false;
     }
 
-    // 웹 저장소에 사출 공정 조각이 있으면 돌려준다. 없으면 null (호출한 쪽이 기본 조각을 쓴다)
+    // 웹 저장소에 사출 공정 노하우가 있으면 돌려준다. 없으면 null (호출한 쪽이 기본 노하우를 쓴다)
     public static List<Fragment> LoadFragments()
     {
         try
@@ -71,7 +71,7 @@ public static class WebStore
         }
         catch (Exception e)
         {
-            Debug.LogWarning("웹 저장소를 읽지 못해 기본 조각을 씁니다: " + e.Message);
+            Debug.LogWarning("웹 저장소를 읽지 못해 기본 노하우를 씁니다: " + e.Message);
             stored = null;
             return null;
         }
@@ -100,7 +100,7 @@ public static class WebStore
 
     static readonly string[] FactorNames = { "humidity", "cold", "hot", "age", "skill" };
 
-    // 새 조각의 번호. 웹 저장소가 있으면 다른 공정의 조각 번호와도 겹치지 않게 한다
+    // 새 노하우의 번호. 웹 저장소가 있으면 다른 공정의 노하우 번호와도 겹치지 않게 한다
     public static string NextId(List<Fragment> frags)
     {
         int max = 0;
@@ -116,7 +116,7 @@ public static class WebStore
         return n;
     }
 
-    // 3D 화면의 인터뷰로 등록한 조각을 웹 저장소에도 넣는다
+    // 3D 화면의 인터뷰로 등록한 노하우를 웹 저장소에도 넣는다
     public static void AddRule(Fragment f)
     {
         if (stored == null) return;
@@ -134,7 +134,7 @@ public static class WebStore
         }
         catch (Exception e)
         {
-            Debug.LogWarning("웹 저장소에 조각을 넣지 못했습니다: " + e.Message);
+            Debug.LogWarning("웹 저장소에 노하우를 넣지 못했습니다: " + e.Message);
         }
     }
 }

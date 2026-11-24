@@ -5,6 +5,7 @@ using UnityEngine.Rendering;
 // 1인칭에서는 빈 화면을 드래그해 고개를 돌리고, 화면 아래에 장갑 낀 양손이 보인다.
 public partial class TrainingGame
 {
+    const bool ShotCamera = false;    // 대사할 때 말하는 사람 앞으로 카메라를 옮길지
     bool firstPerson = true;
     float blend = 1f;                 // 0 = 전체 보기, 1 = 1인칭 (부드럽게 오간다)
     float lookYaw, lookPitch;         // 마우스로 돌린 만큼 (처음 바라보는 방향 기준)
@@ -79,7 +80,8 @@ public partial class TrainingGame
         machine.cam.fieldOfView = Mathf.Lerp(42f, 68f, k);
 
         // 팀원이 말할 때는 카메라가 그 사람 앞으로 다가갔다가, 말이 끝나면 내 자리로 돌아온다
-        bool shotOn = firstPerson && shotWorker != null && Time.time < cueUntil - 0.3f;
+        // 말하는 사람 앞으로 카메라가 날아가면 벽이나 몸에 파묻혀 화면이 잘리고 끊겨 보여서 끈다. 카메라는 늘 내 눈높이에 있다
+        bool shotOn = ShotCamera && firstPerson && shotWorker != null && Time.time < cueUntil - 0.3f;
         shotK = Mathf.MoveTowards(shotK, shotOn ? 1f : 0f, Time.deltaTime * 0.9f);
         float sk = Mathf.SmoothStep(0f, 1f, shotK);
         if (sk > 0.001f && shotWorker != null)
@@ -154,9 +156,7 @@ public partial class TrainingGame
     {
         float W = Screen.width / scale;
         var p = new Vector2(mouse.x / scale, (Screen.height - mouse.y) / scale);
-        if (new Rect(24, 24, 440, 700).Contains(p)) return false;                    // 조건 패널
-        if (new Rect(W - 64 - 540 - 60, 0, 540 + 60 + 80, 1080).Contains(p)) return false; // 현장 에이전트(손 포함)
-        if (new Rect(488, 1080 - 24 - 250, W - 488 - 704, 250).Contains(p)) return false; // 생산 패널
+        if (OverPanels(p, W)) return false;                                          // 조건·안내·생산·태블릿 (TrainingGame.Story.cs)
         float cx = 488 + (W - 1076) / 2f;
         if (new Rect(cx - 150, 20, 440, 96).Contains(p)) return false;               // 시점·자료 버튼
         if (showDoc && new Rect(W / 2f - 480f, 110f, 960f, 720f).Contains(p)) return false; // 자료 패널

@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 가상 사출 훈련: 현장 조건을 정하고, 발동된 숙련자 조각을 적용할지 고른 뒤
-// 100쇼트를 생산해 표준 매뉴얼과 결과를 비교한다. 적용한 조각은 원작성자의 활용 횟수로 기록된다.
+// 가상 사출 훈련: 현장 조건을 정하고, 발동된 숙련자 노하우를 적용할지 고른 뒤
+// 100쇼트를 생산해 표준 매뉴얼과 결과를 비교한다. 적용한 노하우는 원작성자의 활용 횟수로 기록된다.
 // 오른쪽의 현장 에이전트 대화는 TrainingGame.Chat.cs에 있다.
 public partial class TrainingGame : MonoBehaviour
 {
@@ -33,13 +33,13 @@ public partial class TrainingGame : MonoBehaviour
     static readonly Color Ink = new Color(0.07f, 0.08f, 0.10f);
     static readonly Color Ink2 = new Color(0.32f, 0.33f, 0.36f);
     static readonly Color Blue = new Color(0.16f, 0.47f, 0.84f);   // 표준 매뉴얼
-    static readonly Color Orange = new Color(0.92f, 0.41f, 0.20f); // 조각 적용
+    static readonly Color Orange = new Color(0.92f, 0.41f, 0.20f); // 노하우 적용
     static readonly Color Green = new Color(0.00f, 0.42f, 0.05f);
 
     void Awake()
     {
         Application.targetFrameRate = 60;
-        // 브라우저에서 실행하면 웹페이지에 등록된 조각을 쓰고, 그 밖에는 기본 조각을 쓴다
+        // 브라우저에서 실행하면 웹페이지에 등록된 노하우를 쓰고, 그 밖에는 기본 노하우를 쓴다
         frags = WebStore.LoadFragments() ?? TacitData.CreateFragments();
         machine = MachineBuilder.Build();
         InitView(); // 1인칭 시점 준비 (TrainingGame.View.cs)
@@ -55,7 +55,7 @@ public partial class TrainingGame : MonoBehaviour
     void Update()
     {
         TickCues();
-        // 조각 상태등: 대기(회색) / 발동(주황) / 적용(초록)
+        // 노하우 상태등: 대기(회색) / 발동(주황) / 적용(초록)
         for (int i = 0; i < frags.Count && i < machine.lamps.Length; i++)
         {
             bool trig = TacitSim.Triggered(frags[i], env);
@@ -71,6 +71,7 @@ public partial class TrainingGame : MonoBehaviour
             MachineBuilder.SetGlow(machine.beacon, (running ? MachineBuilder.LampWait : MachineBuilder.LampOn) * (0.4f + glow * 1.4f));
         }
         UpdateCamera(); // 1인칭 ↔ 전체 보기 (TrainingGame.View.cs)
+        TickPortalSync(); // 플랫폼에서 점검했다고 누른 노하우를 3D의 '따르는 중'으로 잇는다 (TrainingGame.Story.cs)
         if (Input.GetKeyDown(KeyCode.M) && GUIUtility.keyboardControl == 0) FactoryAudio.Toggle(); // M: 소리 켜고 끄기
         if (!running)
         {
@@ -258,7 +259,7 @@ public partial class TrainingGame : MonoBehaviour
         foreach (Transform t in machine.partsRoot) Destroy(t.gameObject);
         ChatRunStarted();
 
-        // 같은 난수로 두 경우를 비교한다: 조각을 적용해 줄어든 불량만 차이로 나타난다
+        // 같은 난수로 두 경우를 비교한다: 노하우를 적용해 줄어든 불량만 차이로 나타난다
         var rng = new System.Random(seed++);
         SimResult std = TacitSim.Evaluate(env, frags, false);
         SimResult cur = TacitSim.Evaluate(env, frags, true);
@@ -291,17 +292,18 @@ public partial class TrainingGame : MonoBehaviour
             if (shotIndex == Shots / 2) Cue(defects <= 3 ? "mid_ok" : "mid_bad");
         }
 
-        // 활용 기록: 발동된 조각을 작업자가 적용하고 생산을 마치면 1회
+        // 활용 기록: 발동된 노하우를 작업자가 적용하고 생산을 마치면 1회
         var credits = new List<string>();
         foreach (Fragment f in frags)
         {
             if (!f.applied || !TacitSim.Triggered(f, env)) continue;
-            f.uses++;
+            if (f.portalCredited) f.portalCredited = false; // 플랫폼에서 이미 +1 된 건
+            else f.uses++;
             credits.Add(f.id + "(" + f.author + ")");
         }
         creditLine = credits.Count > 0
             ? "활용 기록 +1: " + string.Join(", ", credits.ToArray())
-            : "따른 조각이 없어 활용 기록이 없습니다.";
+            : "활용 기록을 남긴 노하우가 없습니다.";
         if (credits.Count > 0)
         {
             WebStore.SaveUses(frags);
@@ -417,7 +419,7 @@ public partial class TrainingGame : MonoBehaviour
         if (showDoc)
         {
             // 자료를 열면 자료 화면만 보인다 (뒤는 어둡게, 다른 패널과 입력칸은 숨김)
-            HideWebInput();
+            HideWebInput(); HideWebPortal();
             FillA(new Rect(0, 0, W, 1080), new Color(0.04f, 0.05f, 0.07f, 0.78f));
             DrawDoc(new Rect(W / 2f - 480f, 110f, 960f, 760f));
             if (GUI.Button(new Rect(W / 2f - 480f, 24f, 220f, 56f), "← 돌아가기", sBtnOn)) showDoc = false;
@@ -425,15 +427,13 @@ public partial class TrainingGame : MonoBehaviour
         }
         DrawWorldLabels(scale);
         DrawSubtitle(W);
-        DrawConditions(new Rect(24, 24, 440, 700));
-        DrawChat(new Rect(W - 64 - 540, 60, 540, 910), scale);
-        DrawProduction(new Rect(488, 1080 - 24 - 250, W - 488 - 704, 250));
-        DrawHeldHands(heldRect);
+        DrawPanels(W, scale); // 조건 창·안내 띠·생산 띠·태블릿 (TrainingGame.Story.cs)
         DrawViewToggle(W);
         if (showLedger) DrawLedger(new Rect(Mathf.Max(480f, Mathf.Min(W / 2f - 430f, W - 604f - 860f - 16f)), 150, 860, 520)); // 태블릿을 가리지 않게 왼쪽으로
     }
 
     // 표지판 글자를 3D 위치에 맞춰 화면에 그린다 (패널보다 먼저 그려서 패널에 가려지게 한다)
+    const float MinLabelPx = 24f; // 이보다 작게 보이는 표지 글자는 숨긴다 (1080 기준 글자 크기)
     void DrawWorldLabels(float scale)
     {
         Camera cam = Camera.main;
@@ -446,6 +446,7 @@ public partial class TrainingGame : MonoBehaviour
             float top = cam.WorldToScreenPoint(l.position + Vector3.up * l.height * 0.5f).y;
             float bottom = cam.WorldToScreenPoint(l.position - Vector3.up * l.height * 0.5f).y;
             float px = Mathf.Abs(top - bottom) / scale;
+            if (px * 0.8f < MinLabelPx) continue; // 멀리 있어 깨알같이 보이는 표지 글자는 그리지 않는다 (화면이 지저분해진다)
             var style = new GUIStyle(sLabel)
             {
                 fontSize = Mathf.Max(8, Mathf.RoundToInt(px * 0.8f)),
@@ -485,7 +486,7 @@ public partial class TrainingGame : MonoBehaviour
         GUI.Label(new Rect(x, y, w, 34), "예상 불량률", sHead); y += 38;
         float max = Mathf.Max(12f, std.defect);
         RateBar(x, ref y, w, "작업표준서만 보면", std.defect, max, Blue);
-        RateBar(x, ref y, w, "숙련자 조각을 따르면", cur.defect, max, Orange);
+        RateBar(x, ref y, w, "숙련자 노하우를 활용하면", cur.defect, max, Orange);
         GUI.Label(new Rect(x, y, w, 24), "월 다운타임 " + std.down.ToString("0.0") + "h → " + cur.down.ToString("0.0") + "h", sSmall);
         y += 30;
         GUI.Label(new Rect(x, y, w, 24), "수치는 예시 가정 모델입니다", sSmall);
@@ -514,7 +515,7 @@ public partial class TrainingGame : MonoBehaviour
         y += 26;
     }
 
-    // 조각 카드 한 장. 에이전트 대화 안에서, 지금 발동된 조각마다 한 장씩 그린다
+    // 노하우 카드 한 장. 에이전트 대화 안에서, 지금 발동된 노하우마다 한 장씩 그린다
     // 카드 내용: 증상 → 확인 순서 → 원인, 그리고 남긴 사람과 활용 횟수
     const float CardHeight = 186f;
     void DrawCard(Rect card, Fragment f)
@@ -567,7 +568,7 @@ public partial class TrainingGame : MonoBehaviour
             GUI.Label(new Rect(x, y + 42, 420, 50), "불량 " + defects + " / " + Shots + "개", sBig);
             int saved = stdDefects - defects;
             string cmp = "작업표준서만 봤다면 " + stdDefects + "개";
-            if (saved > 0) cmp += "  →  숙련자 조각으로 " + saved + "개를 막았습니다";
+            if (saved > 0) cmp += "  →  숙련자 노하우로 " + saved + "개를 막았습니다";
             GUI.Label(new Rect(x, y + 98, w, 34), cmp, sLabel);
             GUI.Label(new Rect(x, y + 132, w, 30), creditLine, sSmall);
             if (GUI.Button(new Rect(x, y + 172, 200, 46), "다시 생산", sBtn)) StartCoroutine(Run());
@@ -577,7 +578,7 @@ public partial class TrainingGame : MonoBehaviour
         {
             GUI.Label(new Rect(x, y, w, 36), "도어 트림 부품 " + Shots + "쇼트를 생산해 보세요", sTitle);
             GUI.Label(new Rect(x, y + 44, w, 60),
-                "조각을 따르지 않으면 작업표준서만 보고 생산합니다.\n같은 조건에서 따르기 전후를 비교해 보세요.", sWrap);
+                "노하우를 따르지 않으면 작업표준서만 보고 생산합니다.\n같은 조건에서 따르기 전후를 비교해 보세요.", sWrap);
             if (GUI.Button(new Rect(x, y + 172, 260, 46), Shots + "쇼트 생산 시작", sBtn)) StartCoroutine(Run());
         }
     }
@@ -593,7 +594,7 @@ public partial class TrainingGame : MonoBehaviour
         y += 44;
 
         float[] cols = { 0, 330, 440, 550, 660 };
-        string[] heads = { "원작성 숙련자", "조각", "활용", "점수", "배분액" };
+        string[] heads = { "원작성 숙련자", "노하우", "활용", "점수", "배분액" };
         for (int i = 0; i < heads.Length; i++) GUI.Label(new Rect(x + cols[i], y, 200, 34), heads[i], sHead);
         y += 40;
         Fill(new Rect(x, y - 4, w, 2), new Color(0, 0, 0, 0.15f));
@@ -625,7 +626,7 @@ public partial class TrainingGame : MonoBehaviour
         }
         y += 10;
         GUI.Label(new Rect(x, y, w, 52),
-            "조각이 현장에서 쓰일 때마다 원작성자의 활용 횟수가 올라가고, 그만큼 보상 지분이 커집니다.", sWrap);
+            "노하우가 현장에서 쓰일 때마다 원작성자의 활용 횟수가 올라가고, 그만큼 보상 지분이 커집니다.", sWrap);
         // 웹 서비스의 전체 원장(숙련자 인터뷰·신입 도우미 포함)을 브라우저로 연다
         if (GUI.Button(new Rect(r.x + 28, r.yMax - 66, 280, 44), "웹에서 전체 원장 보기", sBtnOn)) Application.OpenURL(WebUrl);
         if (GUI.Button(new Rect(r.xMax - 168, r.yMax - 66, 140, 44), "닫기", sBtn)) showLedger = false;
@@ -648,6 +649,7 @@ public partial class TrainingGame : MonoBehaviour
             }
 
         // 민준 씨의 03:16: 저온·고습의 밤에 본 대로 적는다
+        tabletOpen = true; // 캡처 확인용: 태블릿을 들어 올린 화면
         Preset(4f, 88f);
         yield return null;
         Submit("하얀 물결 같은 게 생겨요");
