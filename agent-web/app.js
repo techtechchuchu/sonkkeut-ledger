@@ -79,7 +79,7 @@
   var tabs = Array.prototype.slice.call(document.querySelectorAll(".tabs button"));
   function showTab(name) {
     tabs.forEach(function (b) { b.setAttribute("aria-selected", b.dataset.tab === name ? "true" : "false"); });
-    ["interview", "assist", "ledger"].forEach(function (t) { $("tab-" + t).hidden = t !== name; });
+    ["interview", "assist", "training", "ledger"].forEach(function (t) { $("tab-" + t).hidden = t !== name; });
     if (name === "ledger") renderLedger();
   }
   tabs.forEach(function (b) { b.addEventListener("click", function () { showTab(b.dataset.tab); }); });
@@ -101,7 +101,7 @@
     cold: { q: "기온이 몇 도 아래로 내려가면 그런가요?", def: 10 },
     hot: { q: "기온이 몇 도를 넘으면 그런가요?", def: 30 },
     age: { q: "설비가 몇 년쯤 됐을 때부터 그런가요?", def: 15 },
-    skill: { q: "입사 몇 주차까지의 신입에게 해당하나요?", def: 24 }
+    skill: { q: "입사 몇 주차까지의 현장 근로자에게 해당하나요?", def: 24 }
   };
   // 30초 말하기 예시: 실제 서비스에서는 이 말을 언어 모델이 아래 구조로 정리한다
   var SAMPLE = {
@@ -155,7 +155,7 @@
 
   function ivStart() {
     iv.draft = {}; iv.chat.clear(); ivRenderDraft();
-    iv.chat.agent("조장님, 방금 해결하신 요령을 남겨 두면 야간에 " + P.name + " 씨 같은 신입이 바로 찾아볼 수 있습니다. 2분이면 됩니다.\n어느 공정을 맡고 계세요?");
+    iv.chat.agent("조장님, 방금 해결하신 요령을 남겨 두면 야간에 " + P.name + " 씨 같은 현장 근로자가 바로 찾아볼 수 있습니다. 2분이면 됩니다.\n어느 공정을 맡고 계세요?");
     iv.step = "process";
     var list = PROCS.map(function (k) { return { label: D.processes[k].name, value: k }; });
     list.push({ label: "30초 말하기 예시 보기", value: "sample" });
@@ -443,10 +443,11 @@
           e.uses + "회</td><td class='num'>" + e.score.toFixed(1) + "</td><td class='num'>" + won(e.payout) + "</td></tr>";
       }).join("") + "</tbody>";
     $("lg-rules").innerHTML =
-      "<thead><tr><th>ID</th><th>공정</th><th>증상</th><th>확인 순서</th><th>원인</th><th>발생 상황</th><th>원작성자</th><th class='num'>활용</th></tr></thead><tbody>" +
+      "<thead><tr><th>ID</th><th>공정</th><th>증상</th><th>확인 순서</th><th>원인</th><th>발생 상황</th><th>원작성자</th><th class='num'>활용</th><th>공유</th></tr></thead><tbody>" +
       rules.slice().reverse().map(function (r) {
         return "<tr><td>" + esc(r.id) + "</td><td>" + esc(D.processes[r.process].name) + "</td><td>" + esc(r.defectType) + "</td><td>" +
-          esc(r.action) + "</td><td>" + esc(r.cause || "") + "</td><td>" + esc(condText(r)) + "</td><td>" + esc(r.author) + "</td><td class='num'>" + r.uses + "회</td></tr>";
+          esc(r.action) + "</td><td>" + esc(r.cause || "") + "</td><td>" + esc(condText(r)) + "</td><td>" + esc(r.author) + "</td><td class='num'>" + r.uses + "회</td>" +
+          "<td><button class='ghost share-btn' type='button' data-share='" + esc(r.id) + "'>링크 복사</button></td></tr>";
       }).join("") + "</tbody>";
   }
   $("lg-pool").addEventListener("input", renderLedger);
@@ -474,7 +475,7 @@
     D.differentiation.map(function (d) {
       return "<tr><td><a href='" + esc(d.url) + "' target='_blank' rel='noopener'>" + esc(d.tool) + "</a></td><td>" + esc(d.what) + "</td><td>" + esc(d.gap) + "</td></tr>";
     }).join("") +
-    "<tr><td>손끝 원장</td><td>문서에 없는 확인 순서를 숙련자의 말에서 새로 기록하고, 활용 횟수로 원작성자를 보상</td><td>문서가 없어도 시작할 수 있음</td></tr></tbody>";
+    "<tr><td>본 서비스</td><td>문서에 없는 확인 순서를 숙련자의 말에서 새로 기록하고, 활용 횟수로 원작성자를 보상</td><td>문서가 없어도 시작할 수 있음</td></tr></tbody>";
 
   var links = [];
   D.stats.forEach(function (s) { links.push({ text: s.value + " " + s.label + " — " + s.source, url: s.url }); });
@@ -679,6 +680,149 @@
       if (tk) return; tk = true;
       requestAnimationFrame(function () { hero.style.setProperty("--py", Math.min(window.scrollY, 600) * -0.08 + "px"); tk = false; });
     }, { passive: true });
+  })();
+
+  /* ---------- 3D 공장을 이 페이지 안에서 연다 ---------- */
+  (function () {
+    var go = document.getElementById("stage-go"), stage = document.getElementById("stage");
+    if (!go || !stage) return;
+    go.addEventListener("click", function () {
+      if (window.innerWidth < 760) { location.href = "mobile.html"; return; } // 폰에서는 3D 대신 가벼운 버전
+      var f = document.createElement("iframe");
+      f.src = "training/";
+      f.title = "3D 사출 공장 훈련";
+      f.setAttribute("allow", "fullscreen; autoplay");
+      f.setAttribute("allowfullscreen", "");
+      stage.innerHTML = "";
+      stage.appendChild(f);
+      var fb = document.createElement("button");
+      fb.type = "button"; fb.className = "stage-full"; fb.textContent = "전체 화면";
+      fb.addEventListener("click", function () { (stage.requestFullscreen || stage.webkitRequestFullscreen || function () {}).call(stage); });
+      stage.appendChild(fb);
+      // 전체 화면으로 바뀌거나 돌아올 때 3D 화면이 새 크기를 다시 재도록 알려 준다 (가장자리가 잘리지 않게)
+      function remeasure() {
+        [0, 250, 800, 1800].forEach(function (ms) {
+          setTimeout(function () {
+            try { f.contentWindow.dispatchEvent(new Event("resize")); } catch (e) {}
+          }, ms);
+        });
+      }
+      document.addEventListener("fullscreenchange", remeasure);
+      document.addEventListener("webkitfullscreenchange", remeasure);
+    });
+  })();
+
+  /* ---------- 근거·참고문헌 창 ---------- */
+  (function () {
+    var dlg = document.getElementById("evidence");
+    if (!dlg || typeof dlg.showModal !== "function") return;
+    [].forEach.call(document.querySelectorAll("[data-open='evidence']"), function (b) {
+      b.addEventListener("click", function () {
+        dlg.showModal();
+        var body = dlg.querySelector(".evid-body"), t = b.getAttribute("data-to") && dlg.querySelector("#" + b.getAttribute("data-to"));
+        body.scrollTop = 0;
+        if (t) body.scrollTop = Math.max(0, t.offsetTop - 8);
+      });
+    });
+    dlg.querySelector("[data-close]").addEventListener("click", function () { dlg.close(); });
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+    [].forEach.call(dlg.querySelectorAll(".evid-nav a"), function (l) {
+      l.addEventListener("click", function (e) {
+        e.preventDefault();
+        var t = dlg.querySelector(l.getAttribute("href"));
+        if (t) dlg.querySelector(".evid-body").scrollTo({ top: t.offsetTop - 8, behavior: "smooth" });
+      });
+    });
+    // 창을 열면 막대 그래프와 숫자가 보이도록 미리 켠다
+    dlg.addEventListener("toggle", function () {
+      if (!dlg.open) return;
+      [].forEach.call(dlg.querySelectorAll(".rv, .bchart, .bcard, .pcard, .step"), function (el) { el.classList.add("in"); });
+    });
+  })();
+
+  /* ---------- 노하우 공유: 서버 없이 링크에 조각 내용을 담아 주고받는다 ---------- */
+  (function () {
+    var KEYS = ["process", "factor", "threshold", "action", "defectType", "cause", "author"];
+
+    function encode(r) {
+      var o = {};
+      KEYS.forEach(function (k) { o[k] = r[k]; });
+      var b = btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+      return b.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    }
+    function decode(code) {
+      var b = String(code).replace(/-/g, "+").replace(/_/g, "/");
+      while (b.length % 4) b += "=";
+      return JSON.parse(decodeURIComponent(escape(atob(b))));
+    }
+    function shareUrl(r) {
+      return location.origin + location.pathname + "#share=" + encode(r);
+    }
+    // 링크든 코드든 #share= 뒤의 글자만 뽑는다
+    function codeOf(text) {
+      var m = String(text).match(/share=([A-Za-z0-9_\-]+)/);
+      return m ? m[1] : String(text).trim();
+    }
+    function clip(s, n) { return String(s == null ? "" : s).slice(0, n); }
+
+    // 가져온 조각이 형식에 맞는지 확인하고 새 번호를 붙여 등록한다
+    function importRule(code) {
+      var o;
+      try { o = decode(code); } catch (e) { return { ok: false, msg: "링크나 코드를 읽지 못했어요. 끝까지 복사했는지 확인해 주세요." }; }
+      if (!o || PROCS.indexOf(o.process) < 0 || !D.factors[o.factor] || !isFinite(Number(o.threshold)) || !o.action || !o.defectType)
+        return { ok: false, msg: "이 앱의 조각 형식이 아니에요." };
+      var dup = rules.filter(function (r) { return r.action === clip(o.action, 200) && r.defectType === clip(o.defectType, 30) && r.author === clip(o.author, 12); })[0];
+      if (dup) return { ok: true, rule: dup, dup: true, msg: dup.id + "은(는) 이미 가지고 있어요." };
+      var rule = {
+        id: nextId(), process: o.process, factor: o.factor, threshold: Number(o.threshold),
+        action: clip(o.action, 200), defectType: clip(o.defectType, 30), cause: clip(o.cause, 80),
+        mDefect: 0.4, mDown: 0.2, author: clip(o.author, 12) || "미지정", uses: 0, active: true
+      };
+      rules.push(rule); save();
+      return { ok: true, rule: rule, msg: rule.id + " (" + rule.defectType + ", 원작성자 " + rule.author + ")을(를) 가져왔어요." };
+    }
+
+    var msg = $("share-msg");
+    function say(t, ok) { msg.textContent = t; msg.className = "hint share-msg " + (ok ? "ok" : "err"); }
+
+    // 조각 옆 "링크 복사"
+    $("lg-rules").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-share]");
+      if (!b) return;
+      var r = rules.filter(function (x) { return x.id === b.dataset.share; })[0];
+      if (!r) return;
+      var url = shareUrl(r);
+      var done = function () { b.textContent = "복사됨"; setTimeout(function () { b.textContent = "링크 복사"; }, 1600); say(r.id + " 링크를 복사했어요. 팀원에게 보내 주세요.", true); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function () { window.prompt("이 링크를 복사하세요", url); });
+      else window.prompt("이 링크를 복사하세요", url);
+    });
+
+    // 붙여 넣어 가져오기
+    $("share-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var res = importRule(codeOf($("share-in").value));
+      say(res.msg, res.ok);
+      if (res.ok) { $("share-in").value = ""; renderLedger(); }
+    });
+
+    // 공유 링크로 들어온 경우: 자동으로 가져오고 알려 준다
+    function fromHash() {
+      var m = location.hash.match(/share=([A-Za-z0-9_\-]+)/);
+      if (!m) return;
+      var res = importRule(m[1]);
+      history.replaceState(null, "", location.pathname + location.search + "#demo"); // 새로고침해도 또 가져오지 않게
+      var t = document.createElement("div");
+      t.className = "share-toast " + (res.ok ? "ok" : "err");
+      t.setAttribute("role", "status");
+      t.innerHTML = "<b>" + (res.ok ? (res.dup ? "이미 있는 노하우" : "공유받은 노하우") : "가져오지 못했어요") + "</b> " + esc(res.msg) +
+        (res.ok ? " <button type='button'>원장에서 보기</button>" : "");
+      document.body.appendChild(t);
+      var btn = t.querySelector("button");
+      if (btn) btn.addEventListener("click", function () { showTab("ledger"); $("demo").scrollIntoView({ behavior: "smooth" }); t.remove(); });
+      setTimeout(function () { t.classList.add("out"); setTimeout(function () { t.remove(); }, 600); }, 9000);
+    }
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
   })();
 
   /* ---------- 시작 ---------- */

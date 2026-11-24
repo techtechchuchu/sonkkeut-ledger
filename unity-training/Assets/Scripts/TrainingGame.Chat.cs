@@ -33,6 +33,12 @@ public partial class TrainingGame
     // 브라우저에서는 한글 입력을 위해 HTML 입력칸을 캔버스 위에 겹쳐 놓는다 (store.jslib)
     [DllImport("__Internal")] static extern void TacitInputLayout(float left, float top, float width, float height, int visible);
     Rect lastWebInput; int lastWebVisible = -1;
+    void HideWebInput()
+    {
+        if (lastWebVisible != 0) { TacitInputLayout(0f, 0f, 0f, 0f, 0); lastWebVisible = 0; lastWebInput = new Rect(); }
+    }
+#else
+    void HideWebInput() { }
 #endif
 
     // ---------- 메시지 ----------
@@ -73,6 +79,8 @@ public partial class TrainingGame
 #endif
         Input.imeCompositionMode = IMECompositionMode.On;
         AgentSay(TacitData.PersonaName + " 씨, 야간 교대입니다. " + TacitData.MentorName + "님은 퇴근했고, 사출 1라인에서 도어 트림 " + Shots + "쇼트를 찍어야 합니다.\n이상이 보이면 본 그대로 적어 주세요. 용어를 몰라도 됩니다. (예: 하얀 물결 같은 게 생겨요)");
+        // 팀원들과 나누는 대화로 시작한다: 조립 A → 민준 → 정비 → 민준 → 조립 B → 민준
+        for (int si = 1; si <= 6; si++) Cue("start" + si, true, 1f);
         ShowCards();
     }
 
@@ -80,6 +88,7 @@ public partial class TrainingGame
     void ShowCards()
     {
         ivStep = null;
+        CueForConditions();
         chat.RemoveAll(m => m.kind == MsgKind.Cards);
         int n = Hits().Count;
         if (n > 0)
@@ -94,7 +103,7 @@ public partial class TrainingGame
     void ReadyChoices()
     {
         SetChoices(
-            new Choice { label = "모두 따르기", silent = true, run = () => { foreach (Fragment f in Hits()) f.applied = true; hasResult = false; ReadyChoices(); } },
+            new Choice { label = "모두 따르기", silent = true, run = () => { foreach (Fragment f in Hits()) f.applied = true; hasResult = false; Cue("follow"); ReadyChoices(); } },
             new Choice { label = Shots + "쇼트 생산 시작", main = true, run = () => StartCoroutine(Run()) },
             new Choice { label = "상황 바꾸기", run = AskSituation },
             new Choice { label = "조장: 노하우 남기기", run = IvStart });
@@ -142,6 +151,7 @@ public partial class TrainingGame
         int n = 0;
         foreach (Fragment f in Hits()) if (f.applied) n++;
         AgentSay(n > 0 ? "조각 " + n + "건을 따르며 생산합니다. 공장을 보세요." : "작업표준서만 보고 생산합니다. 공장을 보세요.");
+        Cue(n > 0 ? "run_with" : "run_without", true, 5f);
     }
 
     void ChatRunFinished(List<string> credits)
@@ -150,6 +160,7 @@ public partial class TrainingGame
         string text = "생산이 끝났습니다. 불량 " + defects + " / " + Shots + "개입니다.\n작업표준서만 봤다면 " + stdDefects + "개";
         text += saved > 0 ? "였을 겁니다. 조장님들의 조각으로 " + saved + "개를 막았습니다." : "였습니다.";
         AgentSay(text);
+        Cue(saved > 0 ? "end_saved" : (defects == 0 ? "end_clean" : "end_none"), true, 5f);
         if (credits.Count > 0) Say(MsgKind.Note, "활용 기록 +1: " + string.Join(", ", credits.ToArray()));
         else AgentSay("따른 조각이 없어 활용 기록은 없습니다. 조각을 따르고 다시 생산해 비교해 보세요.");
         SetChoices(
@@ -163,6 +174,7 @@ public partial class TrainingGame
     {
         ivStep = null;
         showLedger = true;
+        Cue("ledger");
         AgentSay("보상 원장을 띄웠습니다. 민준 씨가 조각을 따를 때마다 남긴 사람의 활용 횟수가 올라가고, 그만큼 보상 지분이 커집니다.");
         ReadyChoices();
     }
@@ -231,7 +243,7 @@ public partial class TrainingGame
         "기온이 몇 도 아래로 내려가면 그런가요?",
         "기온이 몇 도를 넘으면 그런가요?",
         "설비가 몇 년쯤 됐을 때부터 그런가요?",
-        "입사 몇 주차까지의 신입에게 해당하나요?"
+        "입사 몇 주차까지의 현장 근로자에게 해당하나요?"
     };
     static readonly float[] ThresholdDefault = { 70f, 10f, 30f, 15f, 24f };
     static readonly string[] ThresholdUnit = { "%", "℃", "℃", "년", "주" };
@@ -242,6 +254,7 @@ public partial class TrainingGame
     void IvStart()
     {
         ivStep = "symptom";
+        Cue("iv");
         ivDraft = new Fragment { mDefect = 0.4f, mDown = 0.2f }; // 현장 데이터가 쌓이기 전의 초기 추정값
         AgentSay("이번에는 조장님 차례입니다. 방금 해결하신 요령을 남겨 두면 야간에 " + TacitData.PersonaName + " 씨가 바로 찾아볼 수 있습니다.\n어떤 증상이었나요? 눈에 보인 그대로 말씀해 주세요.");
         SetChoices(
@@ -422,6 +435,15 @@ public partial class TrainingGame
     void DrawChat(Rect r, float scale)
     {
         if (!chatStylesReady) InitChatStyles();
+        // 태블릿: 어두운 테두리와 카메라 점, 아래 홈 막대. 화면은 안쪽에 그린다
+        Rect outer = r;
+        outer.height += 20f; // 아래 테두리
+        heldRect = outer; // 1인칭: 손은 맨 나중에 그린다 (OnGUI)
+        Fill(new Rect(outer.x - 12f, outer.y + 10f, outer.width + 14f, outer.height), new Color(0f, 0f, 0f, 0.35f)); // 그림자
+        Fill(new Rect(outer.x, outer.y, outer.width, outer.height), new Color(0.08f, 0.09f, 0.11f, 1f));
+        Fill(new Rect(outer.x, outer.y, 3f, outer.height), new Color(0.30f, 0.32f, 0.37f, 1f));                    // 테두리 빛
+        Fill(new Rect(outer.center.x - 4f, outer.y + 6f, 8f, 8f), new Color(0.25f, 0.27f, 0.31f, 1f));                   // 카메라
+        r = new Rect(r.x + 16f, r.y + 22f, r.width - 32f, r.height - 22f);
         Panel(r);
 
         // 조건 밖으로 나간 조각은 따르기도 풀린다
@@ -431,6 +453,28 @@ public partial class TrainingGame
         float x = r.x + 18, w = r.width - 36;
         GUI.Label(new Rect(x, r.y + 14, w, 36), "현장 에이전트", sTitle);
         GUI.Label(new Rect(x, r.y + 52, w, 30), "용어를 몰라도 본 대로 적으면 찾아 드립니다", sSmall);
+
+        // 에이전트 안의 4가지 기능: 찾기 · 노하우 남기기 · 보상 원장 · 자료
+        {
+            string[] tabNames = { "조각 찾기", "노하우 남기기", "보상 원장", "자료" };
+            int cur = showDoc ? 3 : (showLedger ? 2 : (ivStep != null ? 1 : 0));
+            float tw = (w - 3 * 6f) / 4f;
+            GUI.enabled = !running;
+            for (int ti = 0; ti < 4; ti++)
+            {
+                var tr = new Rect(x + ti * (tw + 6f), r.y + 88f, tw, 40f);
+                var tst = ti == cur ? sBtnOn : sChip;
+                if (GUI.Button(tr, tabNames[ti], tst) && ti != cur)
+                {
+                    showDoc = false;
+                    if (ti == 0) { showLedger = false; ivStep = null; ShowCards(); }
+                    else if (ti == 1) { showLedger = false; IvStart(); }
+                    else if (ti == 2) ChatLedger();
+                    else { showLedger = false; showDoc = true; }
+                }
+            }
+            GUI.enabled = true;
+        }
 
         // 아래에서부터: 입력칸, 선택 버튼, 그 위가 대화
         var inputRect = new Rect(x, r.yMax - 16 - 48, w, 48);
@@ -449,7 +493,7 @@ public partial class TrainingGame
         float chipsY = inputRect.y - 10f - chipsH;
 
         // 대화 영역
-        var view = new Rect(x, r.y + 92, w, chipsY - 8f - (r.y + 92));
+        var view = new Rect(x, r.y + 138, w, chipsY - 8f - (r.y + 138));
         float inner = w - 18f; // 스크롤바 자리
         float total = 0f;
         foreach (ChatMsg m in chat) total += MsgHeight(m, inner, hits.Count) + 8f;
@@ -529,6 +573,109 @@ public partial class TrainingGame
         }
 
         DrawChatInput(inputRect, scale);
+    }
+
+    // 알약 모양(양 끝이 둥근) 흰색 그림. 색은 GUI.color 로 입힌다
+    Texture2D capsuleTex;
+    Texture2D CapsuleTex()
+    {
+        if (capsuleTex != null) return capsuleTex;
+        const int Wd = 128, Ht = 64;
+        capsuleTex = new Texture2D(Wd, Ht, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+        float rad = Ht / 2f;
+        for (int y = 0; y < Ht; y++)
+            for (int x = 0; x < Wd; x++)
+            {
+                float cx = Mathf.Clamp(x + 0.5f, rad, Wd - rad);
+                float d = Mathf.Sqrt((x + 0.5f - cx) * (x + 0.5f - cx) + (y + 0.5f - rad) * (y + 0.5f - rad));
+                capsuleTex.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.Clamp01((rad - d) * 1.5f)));
+            }
+        capsuleTex.Apply();
+        return capsuleTex;
+    }
+
+    void Capsule(Vector2 center, float length, float thick, float angle, Color c)
+    {
+        Matrix4x4 old = GUI.matrix;
+        // RotateAroundPivot 은 축소(scale) 행렬 앞에서 중심을 잡아 위치가 어긋나므로, 가상 좌표 안에서 직접 돌린다
+        GUI.matrix = old * Matrix4x4.TRS(new Vector3(center.x, center.y, 0f), Quaternion.Euler(0f, 0f, angle), Vector3.one)
+                         * Matrix4x4.TRS(new Vector3(-center.x, -center.y, 0f), Quaternion.identity, Vector3.one);
+        Color oc = GUI.color; GUI.color = c;
+        GUI.DrawTexture(new Rect(center.x - length / 2f, center.y - thick / 2f, length, thick), CapsuleTex());
+        GUI.color = oc;
+        GUI.matrix = old;
+    }
+
+    // 원 모양 그림(흰색, 색은 GUI.color)
+    Texture2D discTex;
+    void Disc(Vector2 c, float dia, Color col)
+    {
+        if (discTex == null)
+        {
+            const int N = 64;
+            discTex = new Texture2D(N, N, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+            for (int y = 0; y < N; y++)
+                for (int x = 0; x < N; x++)
+                {
+                    float dx = x + 0.5f - N / 2f, dy = y + 0.5f - N / 2f;
+                    discTex.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.Clamp01((N / 2f - Mathf.Sqrt(dx * dx + dy * dy)) * 1.5f)));
+                }
+            discTex.Apply();
+        }
+        Color oc = GUI.color; GUI.color = col;
+        GUI.DrawTexture(new Rect(c.x - dia / 2f, c.y - dia / 2f, dia, dia), discTex);
+        GUI.color = oc;
+    }
+
+    static readonly Color SkinC = new Color(0.90f, 0.70f, 0.56f, 1f), SkinShade = new Color(0.76f, 0.56f, 0.43f, 1f);
+    static readonly Color ShirtC = new Color(0.22f, 0.27f, 0.35f, 1f), VestC = new Color(0.91f, 0.35f, 0.05f, 1f), HelmetC = new Color(0.98f, 0.80f, 0.14f, 1f);
+
+    Rect heldRect;
+    // 1인칭: 내가 태블릿을 두 손으로 들고 있다. 소매 입은 팔이 화면 아래에서 올라와 아래 모서리를 받치고, 장갑 낀 엄지·검지가 앞 테두리에 걸린다
+    void DrawPersonBack(Rect t) { heldRect = t; }
+
+    void DrawHeldHands(Rect t)
+    {
+        Color sleeve = ShirtC, cuff = VestC;
+        Color glove = new Color(0.60f, 0.63f, 0.68f, 1f), gloveDark = new Color(0.44f, 0.47f, 0.52f, 1f), gloveLight = new Color(0.72f, 0.75f, 0.79f, 1f);
+        for (int side = 0; side < 2; side++)
+        {
+            float sg = side == 0 ? -1f : 1f;                 // -1 왼손, +1 오른손
+            Vector2 p = new Vector2(side == 0 ? t.x + 2f : t.xMax - 2f, t.yMax - 22f); // 잡는 자리(아래 모서리 위쪽)
+            Vector2 d = new Vector2(sg * 0.25f, 0.97f).normalized; // 팔이 화면 아래로 뻗는 방향
+            float ang = Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg;
+            Capsule(p + d * 250f, 560f, 112f, ang, sleeve);                      // 팔(작업복 소매)
+            Capsule(p + d * 120f, 70f, 118f, ang, cuff);                         // 소매 끝 단
+            Capsule(p + d * 56f, 140f, 108f, ang, gloveDark);                    // 손바닥(테두리 뒤를 감쌈)
+            // 앞쪽 테두리에 걸친 엄지와 검지
+            Vector2 inward = new Vector2(-sg, 0f);
+            float tang = Mathf.Atan2(-0.80f, -sg * 0.60f) * Mathf.Rad2Deg;      // 위·안쪽을 향함
+            Capsule(p + inward * 10f + new Vector2(0f, -4f), 96f, 42f, tang, glove);      // 엄지
+            Capsule(p + inward * 18f + new Vector2(0f, -10f), 34f, 32f, tang, gloveLight); // 엄지 끝
+            float iang = Mathf.Atan2(-0.95f, -sg * 0.30f) * Mathf.Rad2Deg;
+            Capsule(p + inward * 6f + new Vector2(0f, -48f), 70f, 32f, iang, glove);       // 검지
+        }
+    }
+
+    Texture2D thumbTex;
+    void DrawThumb(Rect r, bool left)
+    {
+        if (thumbTex == null)
+        {
+            const int N = 64;
+            thumbTex = new Texture2D(N, N, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+            for (int y = 0; y < N; y++)
+                for (int x = 0; x < N; x++)
+                {
+                    float dx = (x - N / 2f) / (N / 2f), dy = (y - N / 2f) / (N / 2f);
+                    float d = Mathf.Sqrt(dx * dx + dy * dy);
+                    float a = Mathf.Clamp01((1f - d) * 14f);
+                    float shade = 0.80f - 0.14f * Mathf.Clamp01(d) - 0.06f * dy;
+                    thumbTex.SetPixel(x, y, new Color(shade, shade, shade * 0.97f, a));
+                }
+            thumbTex.Apply();
+        }
+        GUI.DrawTexture(r, thumbTex, ScaleMode.StretchToFill, true);
     }
 
     void DrawChatInput(Rect r, float scale)

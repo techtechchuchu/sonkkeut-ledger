@@ -26,7 +26,7 @@
     D.differentiation.map(function (d) {
       return "<tr><td><a href='" + esc(d.url) + "' target='_blank' rel='noopener'>" + esc(d.tool) + "</a></td><td>" + esc(d.what) + "</td><td>" + esc(d.gap) + "</td></tr>";
     }).join("") +
-    "<tr><td>손끝 원장</td><td>문서에 없는 확인 순서를 문답으로 새로 기록하고, 활용 횟수로 원작성자를 보상</td><td>문서가 없어도 시작할 수 있음</td></tr></tbody>";
+    "<tr><td>본 서비스</td><td>문서에 없는 확인 순서를 문답으로 새로 기록하고, 활용 횟수로 원작성자를 보상</td><td>문서가 없어도 시작할 수 있음</td></tr></tbody>";
 
   var links = [];
   D.stats.forEach(function (s) { links.push({ text: s.value + " " + s.label + " — " + s.source, url: s.url }); });

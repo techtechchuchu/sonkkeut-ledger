@@ -433,7 +433,8 @@ public static partial class MachineBuilder
 public static class FactoryAudio
 {
     static AudioSource amb, fx;
-    static AudioClip thud;
+    static AudioClip thud, whir;
+    static readonly System.Collections.Generic.List<AudioSource> whirs = new System.Collections.Generic.List<AudioSource>();
     static bool muted;
 
     public static bool Muted => muted;
@@ -452,6 +453,57 @@ public static class FactoryAudio
         fx.spatialBlend = 0f;
         fx.playOnAwake = false;
         thud = Thud();
+        whirs.Clear();
+    }
+
+    // 설비에서 나는 위잉 소리(모터와 펌프). 가까이 갈수록 크게 들리는 3D 소리
+    public static void AddWhir(Transform parent, Vector3 pos, float pitch, float volume)
+    {
+        if (whir == null) whir = Whir();
+        var g = new GameObject("Whir");
+        g.transform.SetParent(parent, false);
+        g.transform.position = pos;
+        var s = g.AddComponent<AudioSource>();
+        s.clip = whir;
+        s.loop = true;
+        s.pitch = pitch;
+        s.volume = volume * 0.5f; // 너무 시끄럽지 않게 절반으로
+        s.spatialBlend = 0.9f;
+        s.rolloffMode = AudioRolloffMode.Linear;
+        s.minDistance = 2.5f;
+        s.maxDistance = 20f;
+        s.dopplerLevel = 0f;
+        s.playOnAwake = false;
+        s.time = Random.value * whir.length; // 설비마다 위상이 달라 겹쳐도 맥놀이처럼 들린다
+        s.mute = muted;
+        s.Play();
+        whirs.Add(s);
+    }
+
+    // 2초 이음매 없는 반복: 모터 소리(140Hz와 배음)가 느리게 오르내리고, 높은 휘파람과 바람이 섞인다
+    static AudioClip Whir()
+    {
+        const int rate = 22050;
+        const int total = rate * 2;
+        var data = new float[total];
+        var rng = new System.Random(23);
+        float lp = 0f;
+        for (int i = 0; i < total; i++)
+        {
+            float t = i / (float)rate;
+            float ph = 2f * Mathf.PI * (140f * t - (12f / Mathf.PI) * Mathf.Cos(Mathf.PI * t)); // 2초에 한 번 오르내리는 음높이
+            float tone = 0.55f * Mathf.Sin(ph) + 0.30f * Mathf.Sin(2f * ph) + 0.16f * Mathf.Sin(3f * ph) + 0.08f * Mathf.Sin(5f * ph);
+            float whine = 0.10f * Mathf.Sin(2f * Mathf.PI * (1260f * t + 30f * Mathf.Sin(2f * Mathf.PI * t))); // 위잉 하는 높은 소리 (1초 주기)
+            float w = (float)(rng.NextDouble() * 2.0 - 1.0);
+            lp += (w - lp) * 0.12f;
+            data[i] = tone * 0.5f + whine + lp * 0.35f;
+        }
+        float peak = 0.0001f;
+        for (int i = 0; i < total; i++) peak = Mathf.Max(peak, Mathf.Abs(data[i]));
+        for (int i = 0; i < total; i++) data[i] = data[i] / peak * 0.8f;
+        var clip = AudioClip.Create("FactoryWhir", total, 1, rate, false);
+        clip.SetData(data, 0);
+        return clip;
     }
 
     // 6초짜리 이음매 없는 반복: 전원 웅웅(50Hz와 배음), 낮은 럼블, 3초마다 압축기 바람 소리
@@ -523,5 +575,6 @@ public static class FactoryAudio
         muted = !muted;
         if (amb != null) amb.mute = muted;
         if (fx != null) fx.mute = muted;
+        foreach (var w in whirs) if (w != null) w.mute = muted;
     }
 }

@@ -78,6 +78,20 @@ public partial class TrainingGame
         ct.rotation = Quaternion.Slerp(ovRot, povRot, k);
         machine.cam.fieldOfView = Mathf.Lerp(42f, 68f, k);
 
+        // 팀원이 말할 때는 카메라가 그 사람 앞으로 다가갔다가, 말이 끝나면 내 자리로 돌아온다
+        bool shotOn = firstPerson && shotWorker != null && Time.time < cueUntil - 0.3f;
+        shotK = Mathf.MoveTowards(shotK, shotOn ? 1f : 0f, Time.deltaTime * 0.9f);
+        float sk = Mathf.SmoothStep(0f, 1f, shotK);
+        if (sk > 0.001f && shotWorker != null)
+        {
+            Vector3 sp; Quaternion sr;
+            ShotPose(shotWorker, out sp, out sr);
+            ct.position = Vector3.Lerp(ct.position, sp, sk);
+            ct.rotation = Quaternion.Slerp(ct.rotation, sr, sk);
+            machine.cam.fieldOfView = Mathf.Lerp(machine.cam.fieldOfView, 52f, sk);
+        }
+        k *= 1f - sk; // 카메라가 나를 떠나 있는 동안은 내 손이 보이지 않는다
+
         // 내 몸은 보이지 않게 (그림자만 바닥에 남긴다)
         bool hide = k > 0.5f;
         if (hide != bodyHidden)
@@ -88,7 +102,33 @@ public partial class TrainingGame
         }
 
         UpdateHands(k);
+        UpdateFrontWall();
     }
+
+    // 전체 보기 카메라는 앞벽(z=-9.2) 바깥에 있어서, 벽이 시야를 가린다. 전체 보기일 때는 앞벽을 그림자만 남기고 숨긴다
+    Renderer[] frontWallRenderers;
+    bool frontWallHidden;
+    void UpdateFrontWall()
+    {
+        if (frontWallRenderers == null)
+        {
+            var list = new System.Collections.Generic.List<Renderer>();
+            foreach (string n in new[] { "FrontWall", "FrontWallBand", "FrontWindow0", "FrontWindow1", "FrontWindow2", "FrontWindow3", "FrontWindow4" })
+            {
+                GameObject g = GameObject.Find(n);
+                if (g == null) continue;
+                var r = g.GetComponent<Renderer>();
+                if (r != null) list.Add(r);
+            }
+            frontWallRenderers = list.ToArray();
+        }
+        bool hide = blend < 0.6f;
+        if (hide == frontWallHidden) return;
+        frontWallHidden = hide;
+        foreach (Renderer r in frontWallRenderers)
+            if (r != null) r.shadowCastingMode = hide ? ShadowCastingMode.ShadowsOnly : ShadowCastingMode.On;
+    }
+
 
     // 화면 빈 곳을 드래그하면 고개가 돌아간다 (패널 위에서는 돌아가지 않는다)
     void HandleLook()
@@ -115,12 +155,12 @@ public partial class TrainingGame
         float W = Screen.width / scale;
         var p = new Vector2(mouse.x / scale, (Screen.height - mouse.y) / scale);
         if (new Rect(24, 24, 440, 700).Contains(p)) return false;                    // 조건 패널
-        if (new Rect(W - 24 - 540, 24, 540, 1032).Contains(p)) return false;         // 현장 에이전트
-        if (new Rect(488, 1080 - 24 - 250, W - 488 - 588, 250).Contains(p)) return false; // 생산 패널
+        if (new Rect(W - 64 - 540 - 60, 0, 540 + 60 + 80, 1080).Contains(p)) return false; // 현장 에이전트(손 포함)
+        if (new Rect(488, 1080 - 24 - 250, W - 488 - 704, 250).Contains(p)) return false; // 생산 패널
         float cx = 488 + (W - 1076) / 2f;
         if (new Rect(cx - 150, 20, 440, 96).Contains(p)) return false;               // 시점·자료 버튼
         if (showDoc && new Rect(W / 2f - 480f, 110f, 960f, 720f).Contains(p)) return false; // 자료 패널
-        if (showLedger && new Rect(W / 2f - 430, 150, 860, 520).Contains(p)) return false;
+        if (showLedger && new Rect(Mathf.Max(480f, Mathf.Min(W / 2f - 430f, W - 604f - 860f - 16f)), 150, 860, 520).Contains(p)) return false;
         return true;
     }
 

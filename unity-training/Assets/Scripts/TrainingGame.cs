@@ -54,6 +54,7 @@ public partial class TrainingGame : MonoBehaviour
 
     void Update()
     {
+        TickCues();
         // 조각 상태등: 대기(회색) / 발동(주황) / 적용(초록)
         for (int i = 0; i < frags.Count && i < machine.lamps.Length; i++)
         {
@@ -282,10 +283,12 @@ public partial class TrainingGame : MonoBehaviour
             if (bad)
             {
                 defects++;
+                if (defects == 1) Cue("first_defect");
                 defectLog.Add((i + 1) + "번째 쇼트: " + TacitSim.PickDefectType(cur, u2));
             }
             StartCoroutine(Fly(MachineBuilder.MakePart(machine, bad), machine.Slot(i)));
             shotIndex = i + 1;
+            if (shotIndex == Shots / 2) Cue(defects <= 3 ? "mid_ok" : "mid_bad");
         }
 
         // 활용 기록: 발동된 조각을 작업자가 적용하고 생산을 마치면 1회
@@ -411,14 +414,23 @@ public partial class TrainingGame : MonoBehaviour
             GUI.DrawTexture(new Rect(0, 0, W, 1080), vignette, ScaleMode.StretchToFill, true);
         }
 
+        if (showDoc)
+        {
+            // 자료를 열면 자료 화면만 보인다 (뒤는 어둡게, 다른 패널과 입력칸은 숨김)
+            HideWebInput();
+            FillA(new Rect(0, 0, W, 1080), new Color(0.04f, 0.05f, 0.07f, 0.78f));
+            DrawDoc(new Rect(W / 2f - 480f, 110f, 960f, 760f));
+            if (GUI.Button(new Rect(W / 2f - 480f, 24f, 220f, 56f), "← 돌아가기", sBtnOn)) showDoc = false;
+            return;
+        }
         DrawWorldLabels(scale);
         DrawSubtitle(W);
         DrawConditions(new Rect(24, 24, 440, 700));
-        DrawChat(new Rect(W - 24 - 540, 24, 540, 1032), scale);
-        DrawProduction(new Rect(488, 1080 - 24 - 250, W - 488 - 588, 250));
+        DrawChat(new Rect(W - 64 - 540, 60, 540, 910), scale);
+        DrawProduction(new Rect(488, 1080 - 24 - 250, W - 488 - 704, 250));
+        DrawHeldHands(heldRect);
         DrawViewToggle(W);
-        if (showDoc) DrawDoc(new Rect(W / 2f - 480f, 110f, 960f, 720f));
-        if (showLedger) DrawLedger(new Rect(W / 2f - 430, 150, 860, 520));
+        if (showLedger) DrawLedger(new Rect(Mathf.Max(480f, Mathf.Min(W / 2f - 430f, W - 604f - 860f - 16f)), 150, 860, 520)); // 태블릿을 가리지 않게 왼쪽으로
     }
 
     // 표지판 글자를 3D 위치에 맞춰 화면에 그린다 (패널보다 먼저 그려서 패널에 가려지게 한다)
@@ -528,6 +540,7 @@ public partial class TrainingGame : MonoBehaviour
         {
             f.applied = !f.applied;
             hasResult = false;
+            if (f.applied) Cue("follow");
         }
         GUI.enabled = was;
     }
@@ -617,6 +630,7 @@ public partial class TrainingGame : MonoBehaviour
         if (GUI.Button(new Rect(r.x + 28, r.yMax - 66, 280, 44), "웹에서 전체 원장 보기", sBtnOn)) Application.OpenURL(WebUrl);
         if (GUI.Button(new Rect(r.xMax - 168, r.yMax - 66, 140, 44), "닫기", sBtn)) showLedger = false;
     }
+
 
     // ---------- 검증용 자동 캡처 ----------
 

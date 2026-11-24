@@ -3,37 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>손끝 원장 — 자동차 부품 협력사를 위한 현장 노하우 플랫폼</title>
-<meta name="description" content="숙련자의 확인 순서를 기록해 두었다가 신입이 같은 상황을 만나면 안내하고, 쓰일 때마다 원작성자에게 보상이 돌아가는 서비스 데모">
+<title>제조현장의 암묵지 기록·활용 플랫폼</title>
+<meta name="description" content="숙련자의 확인 순서를 기록해 두었다가 현장 근로자가 같은 상황을 만나면 안내하고, 쓰일 때마다 원작성자에게 보상이 돌아가는 서비스 데모">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="scrolly.css">
 </head>
 <body>
 <div class="progress" id="progress" aria-hidden="true"></div>
 
 <header class="nav">
-  <a class="logo" href="#top"><span class="logo-mark" aria-hidden="true"></span>손끝 원장</a>
+  <a class="logo" href="#top"><span class="logo-mark" aria-hidden="true"></span>암묵지 기록·활용 플랫폼</a>
   <nav class="nav-links" aria-label="주요 메뉴">
+    <a href="#summary">주제</a>
     <a href="#story">하룻밤</a>
+    <a href="#demo">시연</a>
+    <a href="#train">3D</a>
     <a href="#background">배경</a>
     <a href="#how">서비스</a>
-    <a href="#demo">체험</a>
-    <a href="#training">3D 훈련</a>
     <a href="#reward">보상</a>
+    <button type="button" class="nav-evid" data-open="evidence">근거·참고문헌</button>
   </nav>
-  <a class="btn btn-small" href="#demo">체험하기</a>
+  <a class="btn btn-small" href="portal.html">지금 바로 시작하기</a>
 </header>
 
 <section class="hero" id="top">
   <div class="hero-inner">
     <div class="hero-copy">
-      <p class="eyebrow">자동차 부품 협력사를 위한 현장 노하우 플랫폼</p>
+      <p class="eyebrow">제조현장의 암묵지 기록·활용 플랫폼</p>
       <h1>새벽 3시,<br>조장은 퇴근했습니다.</h1>
-      <p class="lede">불량이 나오기 시작한 야간 라인. 숙련자가 남긴 확인 순서가 신입 옆에 있습니다. 그 노하우가 쓰일 때마다, 남긴 사람에게 보상이 돌아갑니다.</p>
+      <p class="lede">불량이 나오기 시작한 야간 라인. 숙련자가 남긴 확인 순서가 현장 근로자 옆에 있습니다. 그 노하우가 쓰일 때마다, 남긴 사람에게 보상이 돌아갑니다.</p>
       <div class="hero-actions">
-        <a class="btn" href="#demo">직접 체험하기</a>
-        <a class="btn btn-ghost" href="#how">서비스 구조 보기</a>
+        <a class="btn" href="portal.html">지금 바로 시작하기</a>
+        <a class="btn btn-ghost" href="#demo">시연 영상 보기</a>
       </div>
     </div>
 
@@ -53,6 +56,36 @@
         <span class="hc-uses">활용 42회</span>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="section alt" id="summary">
+  <div class="wrap">
+    <p class="kicker">주제</p>
+    <h2>사라지는 숙련자의 손끝 노하우를 장부로 남겨, 현장 근로자가 쓰게 합니다</h2>
+    <p class="section-lede">이 서비스는 제조현장의 암묵지 기록·활용 플랫폼입니다. 숙련자가 퇴직하면 작업표준서에 없는 요령(원료 습기 확인, 금형 온도 기다리기, 체크링 마모 점검)도 함께 사라집니다.</p>
+    <div class="sumgrid">
+      <article class="sumcard">
+        <span class="sumno">배경</span>
+        <h3>경력이 짧은 현장 근로자는 원인을 모른 채 조건을 건드립니다</h3>
+        <p>표준서에는 조건값만 있어서, 불량이 나도 무엇부터 볼지 알 수 없습니다.</p>
+      </article>
+      <article class="sumcard">
+        <span class="sumno">서비스</span>
+        <h3>남기고, 찾고, 보상합니다</h3>
+        <ol>
+          <li><b>조각으로 남기기</b> 증상, 원인, 할 일, 출처를 장부에 쌓습니다.</li>
+          <li><b>현장 에이전트</b> "하얀 물결 같은 게 생겨요"라고 적으면 조각을 찾아 줍니다.</li>
+          <li><b>노하우 남기기</b> 조장이 퇴근 전에 남깁니다.</li>
+        </ol>
+      </article>
+      <article class="sumcard">
+        <span class="sumno">체험</span>
+        <h3>표준서만 볼 때와 조각을 따를 때를 비교합니다</h3>
+        <p>웹 장부와 3D 공장에서 같은 조건의 불량률을 견줘 봅니다. 수치는 예시 가정 모델입니다.</p>
+      </article>
+    </div>
+    <p class="sumstory"><b>김민준 씨의 하룻밤</b> 입사 4주차 현장 근로자가 박 조장 없이 야간 교대로 도어 트림 100쇼트를 찍습니다. 하얀 물결 같은 불량이 생기는데 인수인계에는 특이사항이 없었습니다.</p>
   </div>
 </section>
 
@@ -101,247 +134,58 @@
   </div>
 </section>
 
-<section class="section alt" id="background">
-  <div class="wrap">
-    <p class="kicker">사회적 배경</p>
-    <h2>울산 제조 현장은 가장 빨리 늙고, 배울 사람은 들어오지 않습니다</h2>
-    <p class="section-lede">남은 노하우는 기록되지 않은 채 사라지고 있습니다. 수치는 모두 공개 자료에서 가져왔고, 출처를 눌러 확인할 수 있습니다.</p>
-
-    <div class="bgrid">
-      <article class="bcard">
-        <h3><span class="bno">1</span>울산 제조 현장은 전국에서 가장 늙었습니다</h3>
-        <div class="bchart" data-max="50">
-          <p class="bt">울산 제조업 근로자 중 50대 이상 비중, 10년 만에 29% → 43%</p>
-          <div class="bgroup"><span class="by">2013년</span>
-            <div class="brow hot" data-v="29"><em>울산</em><i></i><b>29%</b></div>
-            <div class="brow" data-v="27"><em>전국 평균</em><i></i><b>27%</b></div>
-          </div>
-          <div class="bgroup"><span class="by">2023년</span>
-            <div class="brow hot" data-v="43"><em>울산</em><i></i><b>43%</b></div>
-            <div class="brow" data-v="38"><em>전국 평균</em><i></i><b>38%</b></div>
-          </div>
-        </div>
-        <ul class="bpoints">
-          <li>울산 제조업 근로자 18만 명 중 60세 이상이 2만 1천 명, 50대가 5만 6천 명으로 광역지자체 중 가장 높습니다. 10년 뒤면 이 고숙련 인력 대부분이 은퇴할 것이라는 전망이 나옵니다.</li>
-          <li>울산은 자동차 생산액 전국 1위(24.2%, 2022년)입니다.</li>
-          <li>전국 제조업에서 60세 이상 취업자가 20대 이하보다 많아졌습니다. 2014년 산업 분류 개편 이후 처음입니다.</li>
-        </ul>
-        <p class="bsrc">출처: <a href="https://www.hankyung.com/article/202501084268i" target="_blank" rel="noopener">한국경제, 고용노동부 자료(2023년 말 기준)</a> · <a href="https://www.investkorea.org/us-jp/cntnts/i-2103/web.do" target="_blank" rel="noopener">Invest Korea</a> · <a href="https://biz.sbs.co.kr/amp/article/20000152700" target="_blank" rel="noopener">SBS Biz</a></p>
-      </article>
-
-      <article class="bcard">
-        <h3><span class="bno">2</span>배울 사람이 들어오지 않습니다</h3>
-        <div class="bchart" data-max="25000">
-          <p class="bt">뿌리산업 부족 인원, 9년 사이 2.1배</p>
-          <div class="brow" data-v="10514"><em>2015년</em><i></i><b>10,514명</b></div>
-          <div class="brow hot" data-v="22595"><em>2024년</em><i></i><b>22,595명</b></div>
-        </div>
-        <p class="bsrc">출처: <a href="https://www.dailian.co.kr/news/view/1512579" target="_blank" rel="noopener">데일리안, 산업부·국가뿌리산업진흥센터 「뿌리산업 실태조사」</a></p>
-        <div class="bchart" data-max="40">
-          <p class="bt">뿌리산업 종사자(약 74만 명) 연령 구성 (2025 실태조사)</p>
-          <div class="brow hot" data-v="36.7"><em>50대 이상</em><i></i><b>36.7%</b></div>
-          <div class="brow" data-v="10.3"><em>20대</em><i></i><b>10.3%</b></div>
-        </div>
-        <p class="bsrc">출처: <a href="https://www.nocutnews.co.kr/news/6607884" target="_blank" rel="noopener">노컷뉴스, 「2025년 뿌리산업 실태조사」</a></p>
-      </article>
-
-      <article class="bcard">
-        <h3><span class="bno">3</span>신규채용은 줄고, 사람은 못 채웁니다</h3>
-        <div class="bchart" data-max="6.5">
-          <p class="bt">제조업 신규채용 일자리, 1년 사이 모두 감소 (단위: 만 개)</p>
-          <div class="bgroup"><span class="by">자동차 부품</span>
-            <div class="brow" data-v="6.0"><em>이전 연도</em><i></i><b>6.0</b></div>
-            <div class="brow hot" data-v="5.5"><em>최근 연도</em><i></i><b>5.5</b></div>
-          </div>
-          <div class="bgroup"><span class="by">기타 금속 가공</span>
-            <div class="brow" data-v="5.2"><em>이전 연도</em><i></i><b>5.2</b></div>
-            <div class="brow hot" data-v="4.7"><em>최근 연도</em><i></i><b>4.7</b></div>
-          </div>
-          <div class="bgroup"><span class="by">플라스틱 제품</span>
-            <div class="brow" data-v="3.9"><em>이전 연도</em><i></i><b>3.9</b></div>
-            <div class="brow hot" data-v="3.6"><em>최근 연도</em><i></i><b>3.6</b></div>
-          </div>
-        </div>
-        <p class="bsrc">출처: <a href="https://v.daum.net/v/20260526060420515" target="_blank" rel="noopener">다음(노컷뉴스 단독), 제조업 신규채용 일자리 역대 최저 (2026.5)</a></p>
-        <div class="bchart" data-max="30">
-          <p class="bt">미충원율 상위 산업 (2025년 하반기)</p>
-          <div class="brow" data-v="24.2"><em>운수·창고업</em><i></i><b>24.2%</b></div>
-          <div class="brow hot" data-v="16.0"><em>제조업</em><i></i><b>16.0%</b></div>
-          <div class="brow" data-v="14.4"><em>정보통신업</em><i></i><b>14.4%</b></div>
-        </div>
-        <p class="bsrc">출처: <a href="https://kidd.co.kr/news/244482" target="_blank" rel="noopener">한국산업디자인신문, 고용노동부 「2025년 하반기 직종별 사업체노동력조사」</a></p>
-        <ul class="bpoints">
-          <li>외국인을 고용한 중소기업의 82.6%가 이유로 내국인 구인난을 꼽았습니다. <a href="https://www.kyeonggi.com/article/20260111580241" target="_blank" rel="noopener">경기일보, 중소기업중앙회 조사</a></li>
-          <li class="link-us">우리 서비스와의 연결: 사출은 금형과 함께 뿌리기술에 포함되는 공정이라 우리 대상과 직접 이어집니다. 신입이 외국인일 수도 있어서, 용어를 몰라도 본 그대로 설명하면 찾아 주는 기능의 가치가 커질 수 있습니다.</li>
-        </ul>
-      </article>
-
-      <article class="bcard">
-        <h3><span class="bno">4</span>노하우는 기록되지 않고 사라집니다</h3>
-        <div class="bnums">
-          <div><b class="cnt" data-to="53.4" data-dec="1" data-suffix="세">53.4세</b><span>대한민국명장 평균 연령</span><small><a href="https://v.daum.net/v/20260731050115766" target="_blank" rel="noopener">경기일보 (2026.7.31)</a></small></div>
-          <div><b class="cnt" data-to="61.6" data-dec="1" data-suffix="%">61.6%</b><span>재고용제도를 운영하는 제조업체 비율 (2025년)</span><small><a href="https://www.hankyung.com/article/2026070962631" target="_blank" rel="noopener">한국경제</a></small></div>
-        </div>
-        <ul class="bpoints">
-          <li>숙련기술자들의 은퇴는 다가오는데 청년 유입이 끊겨 "기술 전수의 맥"이 사라질 위기입니다. 대다수 기업은 영세해 자체적인 디지털 전환이나 AI 도입을 엄두도 내지 못하는 상황입니다. <a href="https://v.daum.net/v/20260726053115071" target="_blank" rel="noopener">경기일보 (2026.7.26)</a></li>
-          <li>정부는 명장 고령화를 보완하려고 청년 기술인을 조기에 발굴하는 "기특한 명장" 제도를 새로 만들었습니다. <a href="https://v.daum.net/v/20260731050115766" target="_blank" rel="noopener">경기일보 (2026.7.31)</a></li>
-          <li class="link-us">우리 서비스와의 연결: 재고용 비율이 높다는 것은 숙련자의 경험이 여전히 필요하다는 뜻이고, 보상 규칙의 "정년 후 재고용 판단에 반영"과 바로 이어집니다.</li>
-        </ul>
-      </article>
-
-      <article class="bcard bwide">
-        <h3><span class="bno">5</span>정부는 제조 AI에 투자하지만, 숙련자가 내놓을 이유는 없습니다</h3>
-        <div class="scroll">
-          <table class="roles">
-            <thead><tr><th>정책</th><th>내용</th><th>출처</th></tr></thead>
-            <tbody>
-              <tr><td>중소제조 피지컬 AI 확산 전략 (2026.10)</td><td>2030년까지 스마트제조혁신에 5조 원 이상, DX·AX·RX 연계</td><td><a href="https://eiec.kdi.re.kr/policy/materialView.do?num=288783&topic=L" target="_blank" rel="noopener">KDI 경제정보센터</a></td></tr>
-              <tr><td>중소기업 AI 도입 목표</td><td>도입률 10%, 2030년까지 6천 개 기업 AI 전환</td><td><a href="https://kidd.co.kr/news/247923" target="_blank" rel="noopener">한국산업디자인신문</a></td></tr>
-              <tr><td>3개 부처 AX 통합공고 (2026.3)</td><td>주요 AX 사업 11개, 4,230억 원</td><td><a href="https://www.motir.go.kr/attach/down/095a2dda9c864e1d90d751f7668a1117/91934d09c6394f3ea0f5567abc08a0ad" target="_blank" rel="noopener">산업통상부</a></td></tr>
-              <tr><td>2025 뿌리산업 진흥 실행계획</td><td>범정부 6,846억 원, 인력확보·DX 전환 포함</td><td><a href="https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/170467/view" target="_blank" rel="noopener">산업통상자원부</a></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="problem">
-  <div class="wrap">
-    <p class="kicker">문제</p>
-    <h2>노하우는 사람과 함께 퇴근하고, 결국 은퇴합니다</h2>
-    <p class="section-lede">작업표준서에는 조건값만 있습니다. 무엇부터 확인하고 어떤 순서로 조치하는지는 숙련자의 머릿속에만 있습니다.</p>
-    <div class="stats" id="stats"></div>
-
-    <div class="case">
-      <p class="case-k">예시 상황</p>
-      <p>주간조 조장은 오후부터 3호기 사출기 소리가 평소와 조금 다르다고 느꼈지만, 인수인계 메모에는 "특이사항 없음"만 남았습니다. 새벽 3시, 처음 혼자 야간조를 맡은 입사 4주차 신입 앞에서 사출품에 하얀 줄(은줄)이 생깁니다. 신입은 불량 이름도 모르고, 작업표준서에는 조건값만 있으며, 조건은 임의로 바꿀 수 없습니다. 조장을 깨울지 망설이는 사이 불량이 쌓입니다.</p>
-    </div>
-
-    <div class="pgrid">
-      <article class="pcard">
-        <span class="pno">01</span>
-        <h3>노하우가 문서에 없습니다</h3>
-        <p>작업표준서에는 설정 조건값만 있고, 이상이 생겼을 때 무엇부터 어떤 순서로 확인하는지는 숙련자의 경험 속에만 있습니다. 양산 부품은 조건을 함부로 바꿀 수 없어서, 확인 순서를 모르는 신입은 숙련자를 기다리는 것 외에 할 수 있는 일이 없습니다.</p>
-      </article>
-      <article class="pcard">
-        <span class="pno">02</span>
-        <h3>교대 때 맥락이 끊깁니다</h3>
-        <p>주간조가 그날 무엇을 조정했고 어떤 설비를 지켜보고 있었는지는 대부분 구두나 짧은 메모로만 넘어갑니다. 바쁜 교대 시간에 인수인계는 한 줄("특이사항 없음")로 줄어들기 쉽고, 앞 조가 느낀 이상 징후는 다음 조에 전달되지 않아 같은 문제를 처음부터 다시 겪습니다.</p>
-        <p class="pnote">해외 공정산업에서는 부실한 교대 인수인계가 주요 사고의 원인으로 꼽히며, 일부 추정으로는 사고의 절반 가까이에 해당합니다. 화학 등 공정산업 대상의 해외 추정치라 참고 근거로만 씁니다. <a href="https://wolterskluwer.com/en/expert-insights/how-effective-shift-management-prevents-incidents" target="_blank" rel="noopener">Wolters Kluwer (영문)</a></p>
-      </article>
-      <article class="pcard">
-        <span class="pno">03</span>
-        <h3>숫자로 남지 않는 신호가 있습니다</h3>
-        <p>숙련자는 설비의 소리, 진동, 냄새, 색이 평소와 조금만 달라도 문제를 미리 알아챕니다. 금형이 열릴 때 소리가 둔해졌다거나 수지 타는 냄새가 난다는 식입니다. 공장마다 설비 소리로 이상을 판단하는 인력이 5~10명씩 있지만, 이런 판단 기준은 매뉴얼에도, 센서나 생산관리시스템(MES) 데이터에도 남지 않습니다. 문서 중심으로 학습하는 지금의 AI도 이런 미세한 물리 신호는 잘 해석하지 못합니다.</p>
-        <p class="pnote"><a href="https://www.etnews.com/20260812000246" target="_blank" rel="noopener">전자신문 (2026.8.12)</a> · <a href="https://www.mt.co.kr/future/2026/05/18/2026051216403755838" target="_blank" rel="noopener">머니투데이 (2026.5.18)</a> · <a href="https://v.daum.net/v/20260429060609211" target="_blank" rel="noopener">뉴스1 (2026.4.29)</a></p>
-      </article>
-      <article class="pcard">
-        <span class="pno">04</span>
-        <h3>노하우를 이어받을 사람이 줄고 있습니다</h3>
-        <p>울산 제조업 근로자의 43%가 50대 이상으로 전국에서 가장 높고, 뿌리산업 부족 인원은 9년 사이 2배로 늘었습니다. 숙련자가 은퇴하면 노하우도 함께 사라지고, 중소 사업장은 숙련 기술직 1~2명만 빠져도 생산에 차질이 생깁니다.</p>
-      </article>
-      <article class="pcard">
-        <span class="pno">05</span>
-        <h3>숙련자가 노하우를 내놓을 이유가 없습니다</h3>
-        <p>기존 방식은 모두 숙련자에게 부담만 주고 돌려주는 것이 없습니다. 정부가 480억 원을 들여 명장의 암묵지를 AI로 옮기는 사업을 추진하자 노동계는 "숙련마저 빼앗긴다"며 반발했고, 숙련 데이터의 소유권과 이익 배분 기준이 없다는 점이 핵심 쟁점으로 떠올랐습니다. 기술보다 숙련자의 협조가 먼저 막히는 구조입니다.</p>
-        <p class="pnote"><a href="https://go.seoul.co.kr/news/prnewsView.php?id=431442" target="_blank" rel="noopener">산업통상부 M.AX 컨퍼런스 자료(서울신문)</a> · <a href="https://v.daum.net/v/20260427170137147" target="_blank" rel="noopener">노동계 "숙련마저 빼앗긴다" 반발</a></p>
-      </article>
-    </div>
-
-    <h3 class="sub-h">기존 방식으로는 왜 안 되나</h3>
-    <div class="scroll">
-      <table class="roles lim">
-        <thead><tr><th>기존 방식</th><th>한계</th></tr></thead>
-        <tbody>
-          <tr><td>작업표준서</td><td>조건값만 있고 확인 순서가 없음</td></tr>
-          <tr><td>구두·메모 인수인계</td><td>바쁘면 "특이사항 없음"으로 줄고, 앞 조가 느낀 징후가 넘어가지 않는다</td></tr>
-          <tr><td>전화·단톡방</td><td>야간에 자는 숙련자를 깨워야 하고, 대화는 흘러가 남지 않는다</td></tr>
-          <tr><td>사내 지식관리시스템</td><td>글로 써야 해서 쌓이지 않고, 검색어를 알아야 찾을 수 있음</td></tr>
-          <tr><td>음향 AI 등 센서 솔루션</td><td>별도 장비와 학습 데이터가 필요하고, 숙련자를 대체하는 방향이라 협조를 얻기 어렵다</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section class="section alt" id="how">
-  <div class="wrap">
-    <p class="kicker">서비스</p>
-    <h2>기록하고, 안내하고, 보상합니다</h2>
-    <div class="steps">
-      <article class="step">
-        <span class="step-no">01</span>
-        <h3>말로 남기는 기록</h3>
-        <p>숙련자가 문제를 해결한 직후 30초 동안 말하면, AI가 증상 → 확인 순서 → 원인 → 조치로 정리합니다. 글을 쓰지 않아도 되므로 기록 부담이 작고, 숙련자가 내용을 확인한 뒤에만 등록됩니다.</p>
-      </article>
-      <article class="step">
-        <span class="step-no">02</span>
-        <h3>본 그대로 찾는 안내</h3>
-        <p>신입은 용어를 몰라도 "하얀 물결 같은 게 생겨요"처럼 본 그대로 입력하면 해당 노하우를 찾을 수 있습니다. 조건을 바꾸라고 하지 않고, 승인된 범위 안에서 무엇부터 확인할지만 알려 줍니다.</p>
-      </article>
-      <article class="step">
-        <span class="step-no">03</span>
-        <h3>끊기지 않는 교대 인수인계 <span class="tag-prop">제안</span></h3>
-        <p>교대 직전에 "오늘 조정한 것"과 "지켜볼 것"을 30초 말로 남기면, 다음 조가 시작할 때 설비별 카드로 보입니다. 다음 조가 "확인함"을 눌러야 인수인계가 끝나고, 그 징후가 실제 문제로 이어지면 기록이 서로 연결됩니다. 미리 알린 사람의 판단도 기여로 남습니다.</p>
-      </article>
-      <article class="step">
-        <span class="step-no">04</span>
-        <h3>감각 신호의 기록 <span class="tag-prop">제안</span></h3>
-        <p>"소리가 둔해졌다", "탄 냄새가 난다"처럼 숙련자가 느낀 감각을 말 그대로 남기고, 원하면 휴대폰으로 설비 소리 10초를 함께 녹음합니다. 감각 표현과 소리, 그 뒤의 실제 결과가 함께 쌓이면 이후 소리 기반 이상 감지 모델의 학습 데이터가 됩니다. 사람을 대체하는 음향 AI와 달리 숙련자의 귀를 기록하고 그 기여에 보상하는 방식입니다.</p>
-      </article>
-      <article class="step">
-        <span class="step-no">05</span>
-        <h3>가치 산정</h3>
-        <p>조각을 따랐을 때와 작업표준서만 봤을 때의 예상 불량률과 다운타임을 비교합니다. 계산은 규칙이 맡습니다.</p>
-      </article>
-      <article class="step">
-        <span class="step-no">06</span>
-        <h3>쓰일 때마다 돌아가는 보상</h3>
-        <p>모든 안내에 원작성자를 표시하고, 신입이 노하우를 따른 기록을 보상 근거로 쌓습니다. 회사는 노하우를 사용할 권리를, 숙련자는 보상받을 권리를 갖는 직무발명보상제도와 같은 구조입니다. 보상은 줄어든 불량 비용 안에서 지급하고, 퇴직 후에도 일정 기간 이어지게 합니다.</p>
-      </article>
-    </div>
-    <p class="proto-note">"제안" 표시는 아직 아래 체험에 들어 있지 않은 기능입니다. 체험에서는 기록, 안내, 가치 산정, 보상 원장을 직접 눌러 볼 수 있습니다.</p>
-
-    <h3 class="sub-h">AI는 어디서 무슨 일을 하나</h3>
-    <p class="section-lede">언어 모델은 지식을 만들지 않습니다. 숙련자가 말한 것만 정리하고, 원래 말과 작성자를 붙여 찾아 줍니다. 판정과 계산은 규칙이 맡습니다.</p>
-    <div class="scroll">
-      <table class="roles">
-        <thead><tr><th>단계</th><th>하는 일</th><th>담당</th></tr></thead>
-        <tbody>
-          <tr><td>기록</td><td>숙련자의 30초 말을 증상 → 확인 순서 → 원인 → 조치로 정리</td><td><span class="tag llm">언어 모델</span></td></tr>
-          <tr><td>찾기</td><td>"하얀 물결 같은 게 생겨요"를 은줄로 알아듣고 비슷한 조각을 찾음</td><td><span class="tag llm">언어 모델</span></td></tr>
-          <tr><td>이상 감지</td><td>설비와 검사 데이터에서 평소와 다른 것을 잡음</td><td><span class="tag rule">규칙·ML</span></td></tr>
-          <tr><td>승인 범위 확인</td><td>조치가 작업표준 안에 있는지 판정</td><td><span class="tag rule">규칙</span></td></tr>
-          <tr><td>보상 계산</td><td>활용 횟수와 배분액 산정</td><td><span class="tag rule">규칙</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <ul class="guards">
-      <li>답은 등록된 조각 안에서만 합니다. 없으면 없다고 답합니다.</li>
-      <li>모든 안내에 숙련자의 원래 말과 작성자를 함께 보여 줍니다.</li>
-      <li>정리한 결과는 숙련자가 확인한 뒤에만 등록됩니다.</li>
-      <li>조치가 승인 범위 안인지 판정하는 일과 보상 계산은 규칙이 맡습니다. 소리 녹음은 처음에는 기록과 검색에만 쓰고 판정에는 쓰지 않습니다.</li>
-      <li>외부 유료 서비스 없이 사내에서 동작해, 공정 노하우가 회사 밖으로 나가지 않습니다.</li>
-    </ul>
-  </div>
-</section>
-
 <section class="section" id="demo">
   <div class="wrap">
-    <p class="kicker">체험</p>
-    <h2>그날 밤을 직접 눌러 보세요</h2>
-    <p class="section-lede">박 조장이 되어 노하우를 남기고, 민준 씨가 되어 야간에 찾아보고, 보상 원장에서 결과를 확인합니다.</p>
+    <p class="kicker">시연</p>
+    <h2>지금 이런 것을 만들고 있습니다</h2>
+    <p class="section-lede">숙련자가 노하우를 남기고, 관리자가 승인하고, 현장 근로자가 쓰면 쓰인 만큼 원작성자의 기여가 쌓입니다. 아래로 내리면서 순서대로 보세요.</p>
+    <ol class="steps-demo">
+      <li class="sd">
+        <div class="sd-text"><span class="sd-n">1</span><h3>업무 포털과 역할별 메뉴</h3><p>관리자, 숙련자, 현장 근로자가 한 포털에서 같은 원장을 씁니다. 역할에 따라 메뉴가 달라집니다.</p></div>
+        <video class="sd-video" src="videos/demo1.mp4" muted loop playsinline preload="metadata" controls aria-label="업무 포털과 역할별 메뉴 시연 영상"></video>
+      </li>
+      <li class="sd">
+        <div class="sd-text"><span class="sd-n">2</span><h3>숙련자 노하우 등록</h3><p>증상, 확인 순서, 원인 순서로 판단을 남깁니다. 등록하면 검토 대기로 들어갑니다.</p></div>
+        <video class="sd-video" src="videos/demo2.mp4" muted loop playsinline preload="metadata" controls aria-label="숙련자 노하우 등록 시연 영상"></video>
+      </li>
+      <li class="sd">
+        <div class="sd-text"><span class="sd-n">3</span><h3>관리자 검토와 게시</h3><p>설정값 변경 표현과 비슷한 노하우를 자동으로 점검하고, 승인된 노하우만 게시합니다.</p></div>
+        <video class="sd-video" src="videos/demo3.mp4" muted loop playsinline preload="metadata" controls aria-label="관리자 검토와 게시 시연 영상"></video>
+      </li>
+      <li class="sd">
+        <div class="sd-text"><span class="sd-n">4</span><h3>현장 근로자 검색과 상세 조회</h3><p>증상과 현장 조건으로 찾아, 확인 순서와 원인과 원작성자를 봅니다.</p></div>
+        <video class="sd-video" src="videos/demo4.mp4" muted loop playsinline preload="metadata" controls aria-label="현장 근로자 검색과 상세 조회 시연 영상"></video>
+      </li>
+      <li class="sd">
+        <div class="sd-text"><span class="sd-n">5</span><h3>활용 이력과 보상 원장</h3><p>확인 순서대로 점검했다고 기록하면, 쓰인 만큼 원작성자의 기여 점수가 쌓입니다.</p></div>
+        <video class="sd-video" src="videos/demo5.mp4" muted loop playsinline preload="metadata" controls aria-label="활용 이력과 보상 원장 시연 영상"></video>
+      </li>
+      <li class="sd">
+        <div class="sd-text"><span class="sd-n">6</span><h3>전체 서비스 한 번에</h3><p>등록, 승인, 검색, 활용, 원장 반영까지 하나의 흐름으로 이어집니다.</p></div>
+        <video class="sd-video" src="videos/demo6.mp4" muted loop playsinline preload="metadata" controls aria-label="전체 서비스 한 번에 시연 영상"></video>
+      </li>
+    </ol>
+  </div>
+</section>
 
-    <div class="tabs" role="tablist">
-      <button role="tab" data-tab="interview" aria-selected="true"><b>1</b> 박 조장: 노하우 남기기</button>
-      <button role="tab" data-tab="assist" aria-selected="false"><b>2</b> 민준 씨: 야간에 찾아보기</button>
-      <button role="tab" data-tab="ledger" aria-selected="false"><b>3</b> 보상 원장</button>
+<section class="section alt" id="train">
+  <div class="wrap">
+    <p class="kicker">현장 체험</p>
+    <h2>그날 밤을 3D 공장에서 겪어 봅니다</h2>
+    <p class="section-lede">민준 씨가 되어 현장 에이전트에게 본 대로 말하고, 박 조장의 노하우를 따라 100쇼트를 생산해 결과를 비교합니다. 3D에서 따른 기록은 업무 포털의 보상 원장에 그대로 반영됩니다.</p>
+    <div class="stage" id="stage">
+      <img src="shots/symptom.jpg" alt="3D 사출 공장 화면. 오른쪽 현장 에이전트 패널에서 노하우를 고르고 100쇼트를 생산한다" width="1600" height="900">
+      <button type="button" class="stage-go" id="stage-go">▶ 3D 공장 시작하기</button>
     </div>
+    <p class="stage-tip">설치 없이 PC 브라우저에서 열립니다. 처음 불러올 때 수십 초 걸립니다. <a href="training/" target="_blank" rel="noopener">새 창에서 크게 열기</a> · <a href="mobile.html">휴대폰용 훈련</a> · <a href="TacitTraining_windows.zip" download>Windows용 프로그램</a></p>
+  </div>
+</section>
 
-    <!-- 숙련자 인터뷰 에이전트 -->
-    <div id="tab-interview" class="pane">
+<div id="legacy-demo" hidden>
+  <div class="tabs" role="tablist"><button role="tab" data-tab="training" aria-selected="true">3D</button><button role="tab" data-tab="interview" aria-selected="false">인터뷰</button><button role="tab" data-tab="assist" aria-selected="false">찾아보기</button><button role="tab" data-tab="ledger" aria-selected="false">원장</button></div>
+  <div id="tab-training" class="pane single"></div>
+  <!-- 숙련자 인터뷰 에이전트 -->
+    <div id="tab-interview" class="pane" hidden>
       <section class="chat-card">
         <div class="chat-head">
           <div>
@@ -411,6 +255,17 @@
         <div id="lg-bars"></div>
         <div class="scroll"><table id="lg-table"></table></div>
       </section>
+      <section class="card" id="share-card">
+        <div class="row-head">
+          <h3>노하우 공유</h3>
+        </div>
+        <p class="hint">아래 "등록된 조각"에서 <b>링크 복사</b>를 눌러 팀원에게 보내세요. 받은 사람이 링크를 열면 같은 조각이 자기 화면과 3D 공장에 들어갑니다. 서버 없이 링크에 내용이 담깁니다.</p>
+        <form id="share-form" class="share-form">
+          <input id="share-in" type="text" placeholder="공유받은 링크나 코드를 붙여 넣으세요" autocomplete="off">
+          <button class="ghost" type="submit">가져오기</button>
+        </form>
+        <p class="hint share-msg" id="share-msg" role="status"></p>
+      </section>
       <section class="card">
         <div class="row-head">
           <h3>등록된 조각</h3>
@@ -419,40 +274,53 @@
         <div class="scroll"><table id="lg-rules"></table></div>
       </section>
     </div>
+</div>
+
+<section class="section alt" id="background">
+  <div class="wrap">
+    <p class="kicker">사회적 배경</p>
+    <h2>울산 제조 현장은 빨리 늙고, 배울 사람은 들어오지 않습니다</h2>
+    <div class="bsum">
+      <div><b class="cnt" data-to="43" data-dec="0" data-suffix="%">43%</b><span>울산 제조업 근로자 중 50대 이상 (2023년, 전국 38%)</span></div>
+      <div><b class="cnt" data-to="2.1" data-dec="1" data-suffix="배">2.1배</b><span>뿌리산업 부족 인원, 9년 사이</span></div>
+      <div><b class="cnt" data-to="53.4" data-dec="1" data-suffix="세">53.4세</b><span>대한민국명장 평균 연령</span></div>
+      <div><b class="cnt" data-to="16" data-dec="1" data-suffix="%">16.0%</b><span>제조업 미충원율 (2025년 하반기)</span></div>
+    </div>
+    <p class="evid-open"><button type="button" class="btn btn-ref" data-open="evidence" data-to="ev-bg">참고문헌 바로가기</button></p>
   </div>
 </section>
 
-<section class="section dark" id="training">
+<section class="section" id="problem">
   <div class="wrap">
-    <p class="kicker">3D 훈련</p>
-    <h2>민준 씨의 그날 밤을 3D 공장에서 서 봅니다</h2>
-    <p class="section-lede">Unity로 만든 자동차 도어 트림 사출 라인입니다. 민준 씨가 되어 현장 에이전트에게 본 대로 말하고, 박 조장의 조각을 따라 100쇼트를 생산해 결과를 비교합니다. 위 체험에서 남긴 조각과 보상 기록이 그대로 이어집니다.</p>
-    <div class="shots">
-      <figure class="shot-main">
-        <img src="shots/symptom.jpg" alt="3D 사출 공장 화면. 민준 씨가 하얀 물결 같은 게 생긴다고 적자 현장 에이전트가 은줄 증상으로 알아듣고 박 조장이 남긴 확인 순서를 보여 준다" loading="lazy" width="1600" height="900">
-        <figcaption>03:16 — 민준 씨가 본 대로 적으면 에이전트가 증상을 알아듣고, 박 조장이 남긴 확인 순서와 원인을 보여 줍니다</figcaption>
-      </figure>
-      <figure>
-        <img src="shots/result.jpg" alt="생산 결과 화면. 작업표준서만 봤을 때와 숙련자 조각을 따랐을 때의 불량 개수를 비교한다" loading="lazy" width="1600" height="900">
-        <figcaption>같은 조건에서 조각을 따르기 전후의 불량 개수를 비교합니다</figcaption>
-      </figure>
-      <figure>
-        <img src="shots/ledger.jpg" alt="숙련자 기여도 보상 원장 화면. 숙련자별 조각 수, 활용 횟수, 배분액이 표시된다" loading="lazy" width="1600" height="900">
-        <figcaption>따른 조각은 원작성 숙련자의 활용 횟수로 기록됩니다</figcaption>
-      </figure>
+    <p class="kicker">문제</p>
+    <h2>노하우는 사람과 함께 퇴근하고, 결국 은퇴합니다</h2>
+    <p class="section-lede">작업표준서에는 조건값만 있습니다. 무엇부터 확인하고 어떤 순서로 조치하는지는 숙련자의 머릿속에만 있습니다.</p>
+    <div class="stats" id="stats"></div>
+    <div class="pgrid pshort">
+      <article class="pcard"><span class="pno">01</span><h3>노하우가 문서에 없습니다</h3><p>표준서에는 조건값만 있고, 확인 순서는 숙련자 머릿속에만 있습니다.</p></article>
+      <article class="pcard"><span class="pno">02</span><h3>교대 때 맥락이 끊깁니다</h3><p>인수인계가 "특이사항 없음" 한 줄로 줄어듭니다.</p></article>
+      <article class="pcard"><span class="pno">03</span><h3>숫자로 남지 않는 신호가 있습니다</h3><p>소리, 냄새, 진동으로 알아채는 판단은 어디에도 기록되지 않습니다.</p></article>
+      <article class="pcard"><span class="pno">04</span><h3>이어받을 사람이 줄고 있습니다</h3><p>울산 제조업 근로자의 43%가 50대 이상입니다.</p></article>
+      <article class="pcard"><span class="pno">05</span><h3>내놓을 이유가 없습니다</h3><p>노하우를 내놓아도 숙련자에게 돌아오는 것이 없습니다.</p></article>
     </div>
-    <div class="download">
-      <a class="btn" href="training/">PC에서 3D로 실행</a>
-      <p>설치 없이 PC 브라우저에서 열립니다(처음 불러올 때 수십 초). 위 체험에서 등록한 조각이 3D 공장에 그대로 나타나고, 훈련에서 따른 기록은 이 페이지의 보상 원장에 반영됩니다.</p>
+    <p class="evid-open"><button type="button" class="btn btn-ref" data-open="evidence" data-to="ev-pr">참고문헌 바로가기</button></p>
+  </div>
+</section>
+
+<section class="section alt" id="how">
+  <div class="wrap">
+    <p class="kicker">서비스</p>
+    <h2>기록하고, 안내하고, 보상합니다</h2>
+    <div class="steps">
+      <article class="step"><span class="step-no">01</span><h3>말로 남기는 기록</h3><p>30초 말하면 AI가 증상, 확인 순서, 원인, 조치로 정리하고, 숙련자가 확인해야 등록됩니다.</p></article>
+      <article class="step"><span class="step-no">02</span><h3>본 그대로 찾는 안내</h3><p>"하얀 물결 같은 게 생겨요"처럼 써도 해당 노하우를 찾아 줍니다.</p></article>
+      <article class="step"><span class="step-no">03</span><h3>끊기지 않는 교대 인수인계 <span class="tag-prop">제안</span></h3><p>교대 직전 30초 말로 남기면 다음 조가 설비별 카드로 확인합니다.</p></article>
+      <article class="step"><span class="step-no">04</span><h3>감각 신호의 기록 <span class="tag-prop">제안</span></h3><p>"소리가 둔해졌다" 같은 감각을 말과 10초 녹음으로 남깁니다.</p></article>
+      <article class="step"><span class="step-no">05</span><h3>가치 산정</h3><p>조각을 따랐을 때와 아닐 때의 불량률과 다운타임을 비교합니다.</p></article>
+      <article class="step"><span class="step-no">06</span><h3>쓰일 때마다 돌아가는 보상</h3><p>안내마다 원작성자를 표시하고, 활용될 때마다 보상 근거가 쌓입니다.</p></article>
     </div>
-    <div class="download">
-      <a class="btn btn-ghost" href="mobile.html">휴대폰용 훈련 열기</a>
-      <p>세로 화면에 맞춘 가벼운 버전입니다. 3D 화면은 없지만 계산과 보상 기록은 같습니다.</p>
-    </div>
-    <div class="download">
-      <a class="btn btn-ghost" href="TacitTraining_windows.zip" download>Windows용 프로그램 내려받기</a>
-      <p>약 34MB · 압축을 푼 뒤 TacitTraining.exe 실행 · "Windows의 PC 보호" 창이 뜨면 [추가 정보] → [실행]. 내려받은 프로그램은 웹의 조각 데이터와 이어지지 않습니다.</p>
-    </div>
+    <p class="proto-note">"제안" 표시는 아직 아래 체험에 들어 있지 않은 기능입니다. 언어 모델은 숙련자가 말한 것만 정리하고, 판정과 계산은 규칙이 맡습니다.</p>
+    <p class="evid-open"><button type="button" class="btn btn-ref" data-open="evidence" data-to="ev-how">서비스 상세 · AI 역할 보기</button></p>
   </div>
 </section>
 
@@ -480,22 +348,22 @@
 <section class="section alt" id="effects">
   <div class="wrap">
     <p class="kicker">기대효과</p>
-    <h2>신입은 혼자서도 대응하고, 숙련자는 은퇴 후에도 인정받습니다</h2>
+    <h2>현장 근로자는 혼자서도 대응하고, 숙련자는 은퇴 후에도 인정받습니다</h2>
     <p class="section-lede">숫자로 남지 않던 판단까지 기업의 자산으로 남기는 방식입니다. 아래는 기대하는 효과이며, 현장 검증으로 확인할 값입니다.</p>
     <div class="scroll">
       <table class="roles eff">
         <thead><tr><th>대상</th><th>기대효과</th></tr></thead>
         <tbody>
-          <tr><td>신입 작업자</td><td>야간·주말에도 1차 대응 가능, 용어를 몰라도 검색, 대응 시간 단축</td></tr>
+          <tr><td>현장 근로자</td><td>야간·주말에도 1차 대응 가능, 용어를 몰라도 검색, 대응 시간 단축</td></tr>
           <tr><td>교대조</td><td>앞 조가 느낀 이상 징후를 이어받아 같은 문제를 반복하지 않음</td></tr>
           <tr><td>숙련자</td><td>야간 호출 감소, 노하우 활용만큼 보상, 퇴직 후에도 기여 인정</td></tr>
-          <tr><td>협력사</td><td>불량과 라인 정지 시간 감소, 노하우의 자산화, 신입 교육 기간 단축</td></tr>
+          <tr><td>협력사</td><td>불량과 라인 정지 시간 감소, 노하우의 자산화, 교육 기간 단축</td></tr>
           <tr><td>데이터 자산</td><td>소리·냄새 같은 감각 판단이 결과와 함께 쌓여 향후 이상 감지 모델의 학습 데이터가 됨</td></tr>
           <tr><td>지역·산업</td><td>가장 빠르게 늙는 울산 제조 현장의 숙련 기술 보존, 영세 협력사의 저비용 AI 도입 사례</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="expand">사출 공정에서 시작하지만, 증상·확인 순서·원인·조치라는 기록 구조는 공정과 관계없이 같아서 프레스·용접 등 다른 뿌리공정과 다른 협력사로 넓힐 수 있습니다. 자동차 부품 제조업은 전국 8,668개 사업체, 종사자 25만 700명 규모입니다(2025년 6월). <a href="https://www.hankyung.com/article/202602191114i" target="_blank" rel="noopener">한국경제, 자동차 부품 제조업 산업·일자리 전환 지도(한국고용정보원)</a></p>
+    <p class="expand">사출 공정에서 시작하지만, 증상·확인 순서·원인·조치라는 기록 구조는 공정과 관계없이 같아서 프레스·용접 등 다른 뿌리공정과 다른 협력사로 넓힐 수 있습니다. 자동차 부품 제조업은 전국 8,668개 사업체, 종사자 25만 700명 규모입니다(2025년 6월). <button type="button" class="ref-go" data-open="evidence" data-to="ev-mk">참고문헌 바로가기</button></p>
   </div>
 </section>
 
@@ -507,9 +375,29 @@
   </div>
 </section>
 
+<section class="section start" id="start">
+  <div class="wrap">
+    <h2>지금 바로 시작해 보세요</h2>
+    <p>제조현장의 암묵지를 기록하고, 찾아 쓰고, 쓰인 만큼 돌려주는 흐름을 직접 눌러 볼 수 있습니다.</p>
+    <div class="hero-actions">
+      <a class="btn" href="portal.html">지금 바로 시작하기</a>
+      <a class="btn btn-ghost" href="#train">3D 공장 체험</a>
+    </div>
+  </div>
+</section>
+
 <footer class="footer">
   <div class="wrap">
-    <p class="foot-note">이 페이지는 공모전 제출용 데모입니다. 대화는 규칙 기반으로 동작하며(실제 서비스에서는 언어 모델이 담당), 불량률·보상액과 조각 내용은 예시 가정값입니다. 등록한 내용은 이 브라우저에만 저장됩니다.</p>
+    <div class="foot-team">
+      <b>손끝 원장 팀</b>
+      <ul class="team-list">
+        <li><span class="t-name">김원빈</span><span class="t-aff">울산대학교 · 산업경영공학</span></li>
+        <li><span class="t-name">김찬민</span><span class="t-aff">울산대학교 · 산업경영공학</span></li>
+        <li><span class="t-name">장도희</span><span class="t-aff">울산대학교 · 산업경영공학</span></li>
+        <li><span class="t-name">추재현</span><span class="t-aff">울산대학교 · ICT융합학부</span></li>
+      </ul>
+    </div>
+    <p class="foot-note">이 페이지는 공모전 제출용 데모입니다. 대화는 규칙 기반으로 동작하며(실제 서비스에서는 언어 모델이 담당), 불량률·보상액과 조각 내용은 예시 가정값입니다. 등록한 내용은 이 브라우저에만 저장됩니다. 구역 배경 사진은 AI로 만든 연출 이미지입니다.</p>
     <details class="sources">
       <summary>통계와 참고 자료 출처</summary>
       <ul id="sources"></ul>
@@ -518,8 +406,244 @@
   </div>
 </footer>
 
+<dialog id="evidence" class="evid" aria-label="근거와 참고문헌">
+  <div class="evid-head">
+    <strong>근거 · 참고문헌</strong>
+    <nav class="evid-nav"><a href="#ev-bg">사회적 배경</a><a href="#ev-pr">문제 근거</a><a href="#ev-how">서비스 상세</a><a href="#ev-ai">AI 역할</a><a href="#ev-mk">시장 규모</a></nav>
+    <button type="button" class="evid-x" data-close aria-label="닫기">닫기 ✕</button>
+  </div>
+  <div class="evid-body">
+    <h2 id="ev-bg" class="evid-h">사회적 배경</h2>
+    <p class="evid-lede">수치는 모두 공개 자료에서 가져왔고, 출처를 눌러 확인할 수 있습니다.</p>
+    
+    
+
+    <div class="bgrid">
+      <article class="bcard">
+        <h3><span class="bno">1</span>울산 제조 현장은 전국에서 가장 늙었습니다</h3>
+        <div class="bchart" data-max="50">
+          <p class="bt">울산 제조업 근로자 중 50대 이상 비중, 10년 만에 29% → 43%</p>
+          <div class="bgroup"><span class="by">2013년</span>
+            <div class="brow hot" data-v="29"><em>울산</em><i></i><b>29%</b></div>
+            <div class="brow" data-v="27"><em>전국 평균</em><i></i><b>27%</b></div>
+          </div>
+          <div class="bgroup"><span class="by">2023년</span>
+            <div class="brow hot" data-v="43"><em>울산</em><i></i><b>43%</b></div>
+            <div class="brow" data-v="38"><em>전국 평균</em><i></i><b>38%</b></div>
+          </div>
+        </div>
+        <ul class="bpoints">
+          <li>울산 제조업 근로자 18만 명 중 60세 이상이 2만 1천 명, 50대가 5만 6천 명으로 광역지자체 중 가장 높습니다. 10년 뒤면 이 고숙련 인력 대부분이 은퇴할 것이라는 전망이 나옵니다.</li>
+          <li>울산은 자동차 생산액 전국 1위(24.2%, 2022년)입니다.</li>
+          <li>전국 제조업에서 60세 이상 취업자가 20대 이하보다 많아졌습니다. 2014년 산업 분류 개편 이후 처음입니다.</li>
+        </ul>
+        <p class="bsrc">출처: <a href="https://www.hankyung.com/article/202501084268i" target="_blank" rel="noopener">한국경제, 고용노동부 자료(2023년 말 기준)</a> · <a href="https://www.investkorea.org/us-jp/cntnts/i-2103/web.do" target="_blank" rel="noopener">Invest Korea</a> · <a href="https://biz.sbs.co.kr/amp/article/20000152700" target="_blank" rel="noopener">SBS Biz</a></p>
+      </article>
+
+      <article class="bcard">
+        <h3><span class="bno">2</span>배울 사람이 들어오지 않습니다</h3>
+        <div class="bchart" data-max="25000">
+          <p class="bt">뿌리산업 부족 인원, 9년 사이 2.1배</p>
+          <div class="brow" data-v="10514"><em>2015년</em><i></i><b>10,514명</b></div>
+          <div class="brow hot" data-v="22595"><em>2024년</em><i></i><b>22,595명</b></div>
+        </div>
+        <p class="bsrc">출처: <a href="https://www.dailian.co.kr/news/view/1512579" target="_blank" rel="noopener">데일리안, 산업부·국가뿌리산업진흥센터 「뿌리산업 실태조사」</a></p>
+        <div class="bchart" data-max="40">
+          <p class="bt">뿌리산업 종사자(약 74만 명) 연령 구성 (2025 실태조사)</p>
+          <div class="brow hot" data-v="36.7"><em>50대 이상</em><i></i><b>36.7%</b></div>
+          <div class="brow" data-v="10.3"><em>20대</em><i></i><b>10.3%</b></div>
+        </div>
+        <p class="bsrc">출처: <a href="https://www.nocutnews.co.kr/news/6607884" target="_blank" rel="noopener">노컷뉴스, 「2025년 뿌리산업 실태조사」</a></p>
+      </article>
+
+      <article class="bcard">
+        <h3><span class="bno">3</span>신규채용은 줄고, 사람은 못 채웁니다</h3>
+        <div class="bchart" data-max="6.5">
+          <p class="bt">제조업 신규채용 일자리, 1년 사이 모두 감소 (단위: 만 개)</p>
+          <div class="bgroup"><span class="by">자동차 부품</span>
+            <div class="brow" data-v="6.0"><em>이전 연도</em><i></i><b>6.0</b></div>
+            <div class="brow hot" data-v="5.5"><em>최근 연도</em><i></i><b>5.5</b></div>
+          </div>
+          <div class="bgroup"><span class="by">기타 금속 가공</span>
+            <div class="brow" data-v="5.2"><em>이전 연도</em><i></i><b>5.2</b></div>
+            <div class="brow hot" data-v="4.7"><em>최근 연도</em><i></i><b>4.7</b></div>
+          </div>
+          <div class="bgroup"><span class="by">플라스틱 제품</span>
+            <div class="brow" data-v="3.9"><em>이전 연도</em><i></i><b>3.9</b></div>
+            <div class="brow hot" data-v="3.6"><em>최근 연도</em><i></i><b>3.6</b></div>
+          </div>
+        </div>
+        <p class="bsrc">출처: <a href="https://v.daum.net/v/20260526060420515" target="_blank" rel="noopener">다음(노컷뉴스 단독), 제조업 신규채용 일자리 역대 최저 (2026.5)</a></p>
+        <div class="bchart" data-max="30">
+          <p class="bt">미충원율 상위 산업 (2025년 하반기)</p>
+          <div class="brow" data-v="24.2"><em>운수·창고업</em><i></i><b>24.2%</b></div>
+          <div class="brow hot" data-v="16.0"><em>제조업</em><i></i><b>16.0%</b></div>
+          <div class="brow" data-v="14.4"><em>정보통신업</em><i></i><b>14.4%</b></div>
+        </div>
+        <p class="bsrc">출처: <a href="https://kidd.co.kr/news/244482" target="_blank" rel="noopener">한국산업디자인신문, 고용노동부 「2025년 하반기 직종별 사업체노동력조사」</a></p>
+        <ul class="bpoints">
+          <li>외국인을 고용한 중소기업의 82.6%가 이유로 내국인 구인난을 꼽았습니다. <a href="https://www.kyeonggi.com/article/20260111580241" target="_blank" rel="noopener">경기일보, 중소기업중앙회 조사</a></li>
+          <li class="link-us">우리 서비스와의 연결: 사출은 금형과 함께 뿌리기술에 포함되는 공정이라 우리 대상과 직접 이어집니다. 현장 근로자가 외국인일 수도 있어서, 용어를 몰라도 본 그대로 설명하면 찾아 주는 기능의 가치가 커질 수 있습니다.</li>
+        </ul>
+      </article>
+
+      <article class="bcard">
+        <h3><span class="bno">4</span>노하우는 기록되지 않고 사라집니다</h3>
+        <div class="bnums">
+          <div><b class="cnt" data-to="53.4" data-dec="1" data-suffix="세">53.4세</b><span>대한민국명장 평균 연령</span><small><a href="https://v.daum.net/v/20260731050115766" target="_blank" rel="noopener">경기일보 (2026.7.31)</a></small></div>
+          <div><b class="cnt" data-to="61.6" data-dec="1" data-suffix="%">61.6%</b><span>재고용제도를 운영하는 제조업체 비율 (2025년)</span><small><a href="https://www.hankyung.com/article/2026070962631" target="_blank" rel="noopener">한국경제</a></small></div>
+        </div>
+        <ul class="bpoints">
+          <li>숙련기술자들의 은퇴는 다가오는데 청년 유입이 끊겨 "기술 전수의 맥"이 사라질 위기입니다. 대다수 기업은 영세해 자체적인 디지털 전환이나 AI 도입을 엄두도 내지 못하는 상황입니다. <a href="https://v.daum.net/v/20260726053115071" target="_blank" rel="noopener">경기일보 (2026.7.26)</a></li>
+          <li>정부는 명장 고령화를 보완하려고 청년 기술인을 조기에 발굴하는 "기특한 명장" 제도를 새로 만들었습니다. <a href="https://v.daum.net/v/20260731050115766" target="_blank" rel="noopener">경기일보 (2026.7.31)</a></li>
+          <li class="link-us">우리 서비스와의 연결: 재고용 비율이 높다는 것은 숙련자의 경험이 여전히 필요하다는 뜻이고, 보상 규칙의 "정년 후 재고용 판단에 반영"과 바로 이어집니다.</li>
+        </ul>
+      </article>
+
+      <article class="bcard bwide">
+        <h3><span class="bno">5</span>정부는 제조 AI에 투자하지만, 숙련자가 내놓을 이유는 없습니다</h3>
+        <div class="scroll">
+          <table class="roles">
+            <thead><tr><th>정책</th><th>내용</th><th>출처</th></tr></thead>
+            <tbody>
+              <tr><td>중소제조 피지컬 AI 확산 전략 (2026.10)</td><td>2030년까지 스마트제조혁신에 5조 원 이상, DX·AX·RX 연계</td><td><a href="https://eiec.kdi.re.kr/policy/materialView.do?num=288783&topic=L" target="_blank" rel="noopener">KDI 경제정보센터</a></td></tr>
+              <tr><td>중소기업 AI 도입 목표</td><td>도입률 10%, 2030년까지 6천 개 기업 AI 전환</td><td><a href="https://kidd.co.kr/news/247923" target="_blank" rel="noopener">한국산업디자인신문</a></td></tr>
+              <tr><td>3개 부처 AX 통합공고 (2026.3)</td><td>주요 AX 사업 11개, 4,230억 원</td><td><a href="https://www.motir.go.kr/attach/down/095a2dda9c864e1d90d751f7668a1117/91934d09c6394f3ea0f5567abc08a0ad" target="_blank" rel="noopener">산업통상부</a></td></tr>
+              <tr><td>2025 뿌리산업 진흥 실행계획</td><td>범정부 6,846억 원, 인력확보·DX 전환 포함</td><td><a href="https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/170467/view" target="_blank" rel="noopener">산업통상자원부</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </div>
+  
+    <h2 id="ev-pr" class="evid-h">문제 근거</h2>
+    
+    
+
+    <div class="case">
+      <p class="case-k">예시 상황</p>
+      <p>주간조 조장은 오후부터 3호기 사출기 소리가 평소와 조금 다르다고 느꼈지만, 인수인계 메모에는 "특이사항 없음"만 남았습니다. 새벽 3시, 처음 혼자 야간조를 맡은 입사 4주차 현장 근로자 앞에서 사출품에 하얀 줄(은줄)이 생깁니다. 현장 근로자는 불량 이름도 모르고, 작업표준서에는 조건값만 있으며, 조건은 임의로 바꿀 수 없습니다. 조장을 깨울지 망설이는 사이 불량이 쌓입니다.</p>
+    </div>
+
+    <div class="pgrid">
+      <article class="pcard">
+        <span class="pno">01</span>
+        <h3>노하우가 문서에 없습니다</h3>
+        <p>작업표준서에는 설정 조건값만 있고, 이상이 생겼을 때 무엇부터 어떤 순서로 확인하는지는 숙련자의 경험 속에만 있습니다. 양산 부품은 조건을 함부로 바꿀 수 없어서, 확인 순서를 모르는 현장 근로자는 숙련자를 기다리는 것 외에 할 수 있는 일이 없습니다.</p>
+      </article>
+      <article class="pcard">
+        <span class="pno">02</span>
+        <h3>교대 때 맥락이 끊깁니다</h3>
+        <p>주간조가 그날 무엇을 조정했고 어떤 설비를 지켜보고 있었는지는 대부분 구두나 짧은 메모로만 넘어갑니다. 바쁜 교대 시간에 인수인계는 한 줄("특이사항 없음")로 줄어들기 쉽고, 앞 조가 느낀 이상 징후는 다음 조에 전달되지 않아 같은 문제를 처음부터 다시 겪습니다.</p>
+        <p class="pnote">해외 공정산업에서는 부실한 교대 인수인계가 주요 사고의 원인으로 꼽히며, 일부 추정으로는 사고의 절반 가까이에 해당합니다. 화학 등 공정산업 대상의 해외 추정치라 참고 근거로만 씁니다. <a href="https://wolterskluwer.com/en/expert-insights/how-effective-shift-management-prevents-incidents" target="_blank" rel="noopener">Wolters Kluwer (영문)</a></p>
+      </article>
+      <article class="pcard">
+        <span class="pno">03</span>
+        <h3>숫자로 남지 않는 신호가 있습니다</h3>
+        <p>숙련자는 설비의 소리, 진동, 냄새, 색이 평소와 조금만 달라도 문제를 미리 알아챕니다. 금형이 열릴 때 소리가 둔해졌다거나 수지 타는 냄새가 난다는 식입니다. 공장마다 설비 소리로 이상을 판단하는 인력이 5~10명씩 있지만, 이런 판단 기준은 매뉴얼에도, 센서나 생산관리시스템(MES) 데이터에도 남지 않습니다. 문서 중심으로 학습하는 지금의 AI도 이런 미세한 물리 신호는 잘 해석하지 못합니다.</p>
+        <p class="pnote"><a href="https://www.etnews.com/20260812000246" target="_blank" rel="noopener">전자신문 (2026.8.12)</a> · <a href="https://www.mt.co.kr/future/2026/05/18/2026051216403755838" target="_blank" rel="noopener">머니투데이 (2026.5.18)</a> · <a href="https://v.daum.net/v/20260429060609211" target="_blank" rel="noopener">뉴스1 (2026.4.29)</a></p>
+      </article>
+      <article class="pcard">
+        <span class="pno">04</span>
+        <h3>노하우를 이어받을 사람이 줄고 있습니다</h3>
+        <p>울산 제조업 근로자의 43%가 50대 이상으로 전국에서 가장 높고, 뿌리산업 부족 인원은 9년 사이 2배로 늘었습니다. 숙련자가 은퇴하면 노하우도 함께 사라지고, 중소 사업장은 숙련 기술직 1~2명만 빠져도 생산에 차질이 생깁니다.</p>
+      </article>
+      <article class="pcard">
+        <span class="pno">05</span>
+        <h3>숙련자가 노하우를 내놓을 이유가 없습니다</h3>
+        <p>기존 방식은 모두 숙련자에게 부담만 주고 돌려주는 것이 없습니다. 정부가 480억 원을 들여 명장의 암묵지를 AI로 옮기는 사업을 추진하자 노동계는 "숙련마저 빼앗긴다"며 반발했고, 숙련 데이터의 소유권과 이익 배분 기준이 없다는 점이 핵심 쟁점으로 떠올랐습니다. 기술보다 숙련자의 협조가 먼저 막히는 구조입니다.</p>
+        <p class="pnote"><a href="https://go.seoul.co.kr/news/prnewsView.php?id=431442" target="_blank" rel="noopener">산업통상부 M.AX 컨퍼런스 자료(서울신문)</a> · <a href="https://v.daum.net/v/20260427170137147" target="_blank" rel="noopener">노동계 "숙련마저 빼앗긴다" 반발</a></p>
+      </article>
+    </div>
+
+    <h3 class="sub-h">기존 방식으로는 왜 안 되나</h3>
+    <div class="scroll">
+      <table class="roles lim">
+        <thead><tr><th>기존 방식</th><th>한계</th></tr></thead>
+        <tbody>
+          <tr><td>작업표준서</td><td>조건값만 있고 확인 순서가 없음</td></tr>
+          <tr><td>구두·메모 인수인계</td><td>바쁘면 "특이사항 없음"으로 줄고, 앞 조가 느낀 징후가 넘어가지 않는다</td></tr>
+          <tr><td>전화·단톡방</td><td>야간에 자는 숙련자를 깨워야 하고, 대화는 흘러가 남지 않는다</td></tr>
+          <tr><td>사내 지식관리시스템</td><td>글로 써야 해서 쌓이지 않고, 검색어를 알아야 찾을 수 있음</td></tr>
+          <tr><td>음향 AI 등 센서 솔루션</td><td>별도 장비와 학습 데이터가 필요하고, 숙련자를 대체하는 방향이라 협조를 얻기 어렵다</td></tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <h2 id="ev-how" class="evid-h">서비스 상세</h2>
+    <div class="steps">
+      <article class="step">
+        <span class="step-no">01</span>
+        <h3>말로 남기는 기록</h3>
+        <p>숙련자가 문제를 해결한 직후 30초 동안 말하면, AI가 증상 → 확인 순서 → 원인 → 조치로 정리합니다. 글을 쓰지 않아도 되므로 기록 부담이 작고, 숙련자가 내용을 확인한 뒤에만 등록됩니다.</p>
+      </article>
+      <article class="step">
+        <span class="step-no">02</span>
+        <h3>본 그대로 찾는 안내</h3>
+        <p>현장 근로자는 용어를 몰라도 "하얀 물결 같은 게 생겨요"처럼 본 그대로 입력하면 해당 노하우를 찾을 수 있습니다. 조건을 바꾸라고 하지 않고, 승인된 범위 안에서 무엇부터 확인할지만 알려 줍니다.</p>
+      </article>
+      <article class="step">
+        <span class="step-no">03</span>
+        <h3>끊기지 않는 교대 인수인계 <span class="tag-prop">제안</span></h3>
+        <p>교대 직전에 "오늘 조정한 것"과 "지켜볼 것"을 30초 말로 남기면, 다음 조가 시작할 때 설비별 카드로 보입니다. 다음 조가 "확인함"을 눌러야 인수인계가 끝나고, 그 징후가 실제 문제로 이어지면 기록이 서로 연결됩니다. 미리 알린 사람의 판단도 기여로 남습니다.</p>
+      </article>
+      <article class="step">
+        <span class="step-no">04</span>
+        <h3>감각 신호의 기록 <span class="tag-prop">제안</span></h3>
+        <p>"소리가 둔해졌다", "탄 냄새가 난다"처럼 숙련자가 느낀 감각을 말 그대로 남기고, 원하면 휴대폰으로 설비 소리 10초를 함께 녹음합니다. 감각 표현과 소리, 그 뒤의 실제 결과가 함께 쌓이면 이후 소리 기반 이상 감지 모델의 학습 데이터가 됩니다. 사람을 대체하는 음향 AI와 달리 숙련자의 귀를 기록하고 그 기여에 보상하는 방식입니다.</p>
+      </article>
+      <article class="step">
+        <span class="step-no">05</span>
+        <h3>가치 산정</h3>
+        <p>조각을 따랐을 때와 작업표준서만 봤을 때의 예상 불량률과 다운타임을 비교합니다. 계산은 규칙이 맡습니다.</p>
+      </article>
+      <article class="step">
+        <span class="step-no">06</span>
+        <h3>쓰일 때마다 돌아가는 보상</h3>
+        <p>모든 안내에 원작성자를 표시하고, 현장 근로자가 노하우를 따른 기록을 보상 근거로 쌓습니다. 회사는 노하우를 사용할 권리를, 숙련자는 보상받을 권리를 갖는 직무발명보상제도와 같은 구조입니다. 보상은 줄어든 불량 비용 안에서 지급하고, 퇴직 후에도 일정 기간 이어지게 합니다.</p>
+      </article>
+    </div>
+    
+    <p class="proto-note">"제안" 표시는 아직 체험에 들어 있지 않은 기능입니다.</p>
+    <h2 id="ev-ai" class="evid-h">AI 역할</h2>
+    
+    <p class="section-lede">언어 모델은 지식을 만들지 않습니다. 숙련자가 말한 것만 정리하고, 원래 말과 작성자를 붙여 찾아 줍니다. 판정과 계산은 규칙이 맡습니다.</p>
+    <div class="scroll">
+      <table class="roles">
+        <thead><tr><th>단계</th><th>하는 일</th><th>담당</th></tr></thead>
+        <tbody>
+          <tr><td>기록</td><td>숙련자의 30초 말을 증상 → 확인 순서 → 원인 → 조치로 정리</td><td><span class="tag llm">언어 모델</span></td></tr>
+          <tr><td>찾기</td><td>"하얀 물결 같은 게 생겨요"를 은줄로 알아듣고 비슷한 조각을 찾음</td><td><span class="tag llm">언어 모델</span></td></tr>
+          <tr><td>이상 감지</td><td>설비와 검사 데이터에서 평소와 다른 것을 잡음</td><td><span class="tag rule">규칙·ML</span></td></tr>
+          <tr><td>승인 범위 확인</td><td>조치가 작업표준 안에 있는지 판정</td><td><span class="tag rule">규칙</span></td></tr>
+          <tr><td>보상 계산</td><td>활용 횟수와 배분액 산정</td><td><span class="tag rule">규칙</span></td></tr>
+        </tbody>
+      </table>
+    
+      <h2 id="ev-mk" class="evid-h">시장 규모</h2>
+    <p>자동차 부품 제조업은 전국 8,668개 사업체, 종사자 25만 700명 규모입니다(2025년 6월). 출처: <a href="https://www.hankyung.com/article/202602191114i" target="_blank" rel="noopener">한국경제, 자동차 부품 제조업 산업·일자리 전환 지도(한국고용정보원)</a></p>
+  </div>
+</dialog>
 <script src="data.js"></script>
 <script src="sim.js"></script>
 <script src="app.js"></script>
+<script src="scrolly.js"></script>
+
+
+
+<script>
+(function () {
+  var vs = document.querySelectorAll(".sd-video");
+  if (!("IntersectionObserver" in window)) return;
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      var v = e.target;
+      if (e.isIntersecting && e.intersectionRatio > 0.55) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      else v.pause();
+    });
+  }, { threshold: [0, 0.55, 1] });
+  vs.forEach(function (v) { io.observe(v); });
+})();
+</script>
 </body>
 </html>

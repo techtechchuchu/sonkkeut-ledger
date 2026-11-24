@@ -74,9 +74,11 @@ public static class BuildTools
         CreateScene(); // 매번 새로 만들어 설정이 빠지지 않게 한다
         PlayerSettings.productName = "TacitTraining";
         PlayerSettings.companyName = "TacitTeam";
-        PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
-        PlayerSettings.defaultScreenWidth = 1600;
-        PlayerSettings.defaultScreenHeight = 900;
+        // 시작할 때 모니터 크기에 딱 맞는 테두리 없는 전체 화면으로 연다 (화면 배율이 높은 노트북에서 창이 잘리지 않게).
+        // Alt+Enter 로 창 모드로 바꿀 수 있고, 그때 크기는 작게 시작한다
+        PlayerSettings.fullScreenMode = FullScreenMode.FullScreenWindow;
+        PlayerSettings.defaultScreenWidth = 1280;
+        PlayerSettings.defaultScreenHeight = 720;
         PlayerSettings.resizableWindow = true;
 
         var options = new BuildPlayerOptions

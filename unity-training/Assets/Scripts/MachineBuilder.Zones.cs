@@ -30,6 +30,7 @@ public static partial class MachineBuilder
         BuildWalkLine(z);
         BuildDecor(m, z);
         BuildDocProps(m, z);
+        BuildFrontZone(m, z); // 앞벽과 앞쪽 설비 (MachineBuilder.Front.cs)
     }
 
     // 양쪽 벽에 일정한 간격으로 달린 벽등 (벽이 어둠 속에 묻히지 않게)
@@ -484,8 +485,6 @@ public static partial class MachineBuilder
     static void BuildDocProps(Machine m, Transform d)
     {
         BuildHandoverBoard(m, d, new Vector3(3.6f, 0f, -5.2f));
-        StatBoard(m, d, new Vector3(13.78f, 2.3f, 7.4f), -90f, "43%", "울산 제조업 근로자 중 50대 이상 (2023, 전국 38%)", new Color(0.90f, 0.30f, 0.20f));
-        StatBoard(m, d, new Vector3(13.78f, 2.3f, 9.9f), -90f, "2.1배", "뿌리산업 부족 인원, 9년 사이 (2015 → 2024)", new Color(0.95f, 0.62f, 0.10f));
-        StatBoard(m, d, new Vector3(13.78f, 2.3f, 12.4f), -90f, "53.4세", "대한민국명장 평균 연령", new Color(0.25f, 0.60f, 0.90f));
+        // 벽의 통계판(43%·2.1배·53.4세)은 장면을 어수선하게 해서 뺐다. 같은 숫자는 '자료' 화면에서 본다
     }
 }
